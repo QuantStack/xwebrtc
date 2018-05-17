@@ -69,6 +69,7 @@ find_package(xwidgets 0.10.0 REQUIRED)
 # ============
 
 set(XWEBRTC_HEADERS
+    ${XWEBRTC_INCLUDE_DIR}/xwebrtc/xcamera_stream.hpp
     ${XWEBRTC_INCLUDE_DIR}/xwebrtc/xmedia_stream.hpp
     ${XWEBRTC_INCLUDE_DIR}/xwebrtc/xvideo_stream.hpp
     ${XWEBRTC_INCLUDE_DIR}/xwebrtc/xwebrtc_config.hpp
@@ -76,6 +77,7 @@ set(XWEBRTC_HEADERS
 )
 
 set(XWEBRTC_SOURCES
+    ${XWEBRTC_SOURCE_DIR}/xcamera_stream.cpp
     ${XWEBRTC_SOURCE_DIR}/xmedia_stream.cpp
     ${XWEBRTC_SOURCE_DIR}/xvideo_stream.cpp
 )

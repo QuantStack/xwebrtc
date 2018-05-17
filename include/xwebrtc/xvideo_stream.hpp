@@ -13,7 +13,6 @@
 #include <string>
 
 #include "xwidgets/xmaterialize.hpp"
-#include "xwidgets/xwidget.hpp"
 
 #include "xwebrtc_config.hpp"
 #include "xmedia_stream.hpp"
@@ -35,7 +34,7 @@ namespace xwebrtc
         void serialize_state(xeus::xjson&, xeus::buffer_sequence&) const;
         void apply_patch(const xeus::xjson&, const xeus::buffer_sequence&);
 
-        XPROPERTY(std::string, derived_type, url, "https://webrtc.github.io/samples/src/video/chrome.webm");
+        XPROPERTY(std::string, derived_type, url, "https://webrtc.github.io/samples/src/video/chrome.mp4");
         XPROPERTY(bool, derived_type, play, true);
         XPROPERTY(bool, derived_type, loop, true);
 
