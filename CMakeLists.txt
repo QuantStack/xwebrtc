@@ -73,6 +73,7 @@ set(XWEBRTC_HEADERS
     ${XWEBRTC_INCLUDE_DIR}/xwebrtc/xmedia_stream.hpp
     ${XWEBRTC_INCLUDE_DIR}/xwebrtc/xpeer.hpp
     ${XWEBRTC_INCLUDE_DIR}/xwebrtc/xroom_local.hpp
+    ${XWEBRTC_INCLUDE_DIR}/xwebrtc/xroom_mqtt.hpp
     ${XWEBRTC_INCLUDE_DIR}/xwebrtc/xroom.hpp
     ${XWEBRTC_INCLUDE_DIR}/xwebrtc/xvideo_stream.hpp
     ${XWEBRTC_INCLUDE_DIR}/xwebrtc/xwebrtc_config.hpp
@@ -84,6 +85,7 @@ set(XWEBRTC_SOURCES
     ${XWEBRTC_SOURCE_DIR}/xmedia_stream.cpp
     ${XWEBRTC_SOURCE_DIR}/xpeer.cpp
     ${XWEBRTC_SOURCE_DIR}/xroom_local.cpp
+    ${XWEBRTC_SOURCE_DIR}/xroom_mqtt.cpp
     ${XWEBRTC_SOURCE_DIR}/xroom.cpp
     ${XWEBRTC_SOURCE_DIR}/xvideo_stream.cpp
 )
