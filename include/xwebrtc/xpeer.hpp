@@ -27,14 +27,14 @@ namespace xwebrtc
      *********************/
 
     template <class D>
-    class xpeer : public xwebrtc::xmedia_stream<D>
+    class xpeer : public xmedia_stream<D>
     {
     public:
 
-        using base_type = xwebrtc::xmedia_stream<D>;
+        using base_type = xmedia_stream<D>;
         using derived_type = D;
 
-        using stream_type = xw::xholder<xwebrtc::xmedia_stream>;
+        using stream_type = xw::xholder<xmedia_stream>;
 
         void serialize_state(xeus::xjson&, xeus::buffer_sequence&) const;
         void apply_patch(const xeus::xjson&, const xeus::buffer_sequence&);
