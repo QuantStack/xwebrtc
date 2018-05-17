@@ -34,6 +34,8 @@ namespace xwebrtc
         void serialize_state(xeus::xjson&, xeus::buffer_sequence&) const;
         void apply_patch(const xeus::xjson&, const xeus::buffer_sequence&);
 
+        void close() const;
+
         XPROPERTY(bool, derived_type, audio, true);
         XPROPERTY(bool, derived_type, video, true);
 
@@ -71,6 +73,15 @@ namespace xwebrtc
 
         xw::set_property_from_patch(audio, patch, buffers);
         xw::set_property_from_patch(video, patch, buffers);
+    }
+
+    template <class D>
+    inline void xcamera_stream<D>::close() const
+    {
+        xeus::xjson state;
+        xeus::buffer_sequence buffers;
+        state["msg"] = "close";
+        this->send(std::move(state), std::move(buffers));
     }
 
     template <class D>
