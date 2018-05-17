@@ -15,7 +15,6 @@ set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build." FORCE)
 
 set(XWEBRTC_INCLUDE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/include)
 set(XWEBRTC_SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/src)
-set(XWEBRTC_SHARE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/share)
 
 # Configuration
 # =============
@@ -71,10 +70,14 @@ find_package(xwidgets 0.10.0 REQUIRED)
 
 set(XWEBRTC_HEADERS
     ${XWEBRTC_INCLUDE_DIR}/xwebrtc/xmedia_stream.hpp
+    ${XWEBRTC_INCLUDE_DIR}/xwebrtc/xvideo_stream.hpp
+    ${XWEBRTC_INCLUDE_DIR}/xwebrtc/xwebrtc_config.hpp
+    ${XWEBRTC_INCLUDE_DIR}/xwebrtc/xwebrtc_config_cling.hpp
 )
 
 set(XWEBRTC_SOURCES
-    # ${XWEBRTC_SOURCE_DIR}/xcircle_marker.cpp
+    ${XWEBRTC_SOURCE_DIR}/xmedia_stream.cpp
+    ${XWEBRTC_SOURCE_DIR}/xvideo_stream.cpp
 )
 
 # Output
@@ -167,9 +170,6 @@ endif()
 
 # Installation
 # ============
-
-install(DIRECTORY "${XWEBRTC_SHARE_DIR}/xwebrtc"
-        DESTINATION "share")
 
 set(XWEBRTC_CMAKECONFIG_INSTALL_DIR "${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}" CACHE STRING "install path for xwebrtcConfig.cmake")
 

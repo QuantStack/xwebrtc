@@ -50,3 +50,4 @@ docs/build/
 
 # Generated files
 *.pc
+include/xwebrtc/xwebrtc_config_cling.hpp
