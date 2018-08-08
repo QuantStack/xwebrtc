@@ -11,8 +11,11 @@
 #define XWEBRTC_VIDEO_STREAM_HPP
 
 #include <string>
+#include <vector>
+#include <iostream>
 
 #include "xwidgets/xmaterialize.hpp"
+#include "xwidgets/xvideo.hpp"
 
 #include "xwebrtc_config.hpp"
 #include "xmedia_stream.hpp"
@@ -31,16 +34,21 @@ namespace xwebrtc
         using base_type = xmedia_stream<D>;
         using derived_type = D;
 
+        using video_type = xw::xholder<xw::xvideo>;
+
         void serialize_state(xeus::xjson&, xeus::buffer_sequence&) const;
         void apply_patch(const xeus::xjson&, const xeus::buffer_sequence&);
 
-        XPROPERTY(std::string, derived_type, url, "https://webrtc.github.io/samples/src/video/chrome.mp4");
-        XPROPERTY(bool, derived_type, play, true);
-        XPROPERTY(bool, derived_type, loop, true);
+        XPROPERTY(video_type, derived_type, video);
+        XPROPERTY(bool, derived_type, playing, true);
 
     protected:
 
         xvideo_stream();
+        template <class T>
+        xvideo_stream(const xw::xvideo<T>& video);
+        template <class T>
+        xvideo_stream(xw::xvideo<T>&& video);
         using base_type::base_type;
 
     private:
@@ -61,9 +69,8 @@ namespace xwebrtc
     {
         base_type::serialize_state(state, buffers);
 
-        xw::set_patch_from_property(url, state, buffers);
-        xw::set_patch_from_property(play, state, buffers);
-        xw::set_patch_from_property(loop, state, buffers);
+        xw::set_patch_from_property(video, state, buffers);
+        xw::set_patch_from_property(playing, state, buffers);
     }
 
     template <class D>
@@ -71,9 +78,8 @@ namespace xwebrtc
     {
         base_type::apply_patch(patch, buffers);
 
-        xw::set_property_from_patch(url, patch, buffers);
-        xw::set_property_from_patch(play, patch, buffers);
-        xw::set_property_from_patch(loop, patch, buffers);
+        xw::set_property_from_patch(video, patch, buffers);
+        xw::set_property_from_patch(playing, patch, buffers);
     }
 
     template <class D>
@@ -84,10 +90,42 @@ namespace xwebrtc
     }
 
     template <class D>
+    template <class T>
+    inline xvideo_stream<D>::xvideo_stream(const xw::xvideo<T>& video)
+    : base_type()
+    {
+        set_defaults();
+
+        this->video() = video;
+    }
+
+    template <class D>
+    template <class T>
+    inline xvideo_stream<D>::xvideo_stream(xw::xvideo<T>&& video)
+        : base_type()
+    {
+        set_defaults();
+
+        this->video() = std::move(video);
+    }
+
+    template <class D>
     inline void xvideo_stream<D>::set_defaults()
     {
         this->_model_name() = "VideoStreamModel";
         // this->_view_name() = "VideoStreamView";
+    }
+
+    inline video_stream_generator video_stream_from_file(const std::string& filename)
+    {
+        auto vid = xw::video_from_file(filename).autoplay(false).controls(false).finalize();
+        return video_stream_generator().video(std::move(vid));
+    }
+
+    inline video_stream_generator video_stream_from_url(const std::string& url)
+    {
+        auto vid = xw::video_from_url(url).autoplay(false).controls(false).finalize();
+        return video_stream_generator().video(std::move(vid));
     }
 }
 
