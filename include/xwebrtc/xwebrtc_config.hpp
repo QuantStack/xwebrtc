@@ -33,7 +33,7 @@
 
 // Semver requirement for jupyter-webrtc
 #define XJUPYTER_WEBRTC_VERSION_MAJOR 0
-#define XJUPYTER_WEBRTC_VERSION_MINOR 3
+#define XJUPYTER_WEBRTC_VERSION_MINOR 4
 #define XJUPYTER_WEBRTC_VERSION_PATCH 0
 
 // Composing the version strings from major, minor and patch
