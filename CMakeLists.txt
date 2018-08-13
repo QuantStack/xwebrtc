@@ -72,6 +72,7 @@ set(XWEBRTC_HEADERS
     ${XWEBRTC_INCLUDE_DIR}/xwebrtc/xaudio_recorder.hpp
     ${XWEBRTC_INCLUDE_DIR}/xwebrtc/xaudio_stream.hpp
     ${XWEBRTC_INCLUDE_DIR}/xwebrtc/xcamera_stream.hpp
+    ${XWEBRTC_INCLUDE_DIR}/xwebrtc/xchat.hpp
     ${XWEBRTC_INCLUDE_DIR}/xwebrtc/ximage_recorder.hpp
     ${XWEBRTC_INCLUDE_DIR}/xwebrtc/ximage_stream.hpp
     ${XWEBRTC_INCLUDE_DIR}/xwebrtc/xmedia_stream.hpp
