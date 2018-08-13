@@ -34,10 +34,7 @@ namespace xwebrtc
         void serialize_state(xeus::xjson&, xeus::buffer_sequence&) const;
         void apply_patch(const xeus::xjson&, const xeus::buffer_sequence&);
 
-        void close() const;
-
-        XPROPERTY(bool, derived_type, audio, true);
-        XPROPERTY(bool, derived_type, video, true);
+        XPROPERTY(xeus::xjson, derived_type, constraints);
 
     protected:
 
@@ -60,28 +57,19 @@ namespace xwebrtc
     template <class D>
     inline void xcamera_stream<D>::serialize_state(xeus::xjson& state, xeus::buffer_sequence& buffers) const
     {
+        using xw::set_patch_from_property;
         base_type::serialize_state(state, buffers);
 
-        xw::set_patch_from_property(audio, state, buffers);
-        xw::set_patch_from_property(video, state, buffers);
+        set_patch_from_property(constraints, state, buffers);
     }
 
     template <class D>
     inline void xcamera_stream<D>::apply_patch(const xeus::xjson& patch, const xeus::buffer_sequence& buffers)
     {
+        using xw::set_property_from_patch;
         base_type::apply_patch(patch, buffers);
 
-        xw::set_property_from_patch(audio, patch, buffers);
-        xw::set_property_from_patch(video, patch, buffers);
-    }
-
-    template <class D>
-    inline void xcamera_stream<D>::close() const
-    {
-        xeus::xjson state;
-        xeus::buffer_sequence buffers;
-        state["msg"] = "close";
-        this->send(std::move(state), std::move(buffers));
+        set_property_from_patch(constraints, patch, buffers);
     }
 
     template <class D>
@@ -89,6 +77,8 @@ namespace xwebrtc
         : base_type()
     {
         set_defaults();
+
+        this->constraints() = {{"audio", true}, {"video", true}};
     }
 
     template <class D>
@@ -96,6 +86,16 @@ namespace xwebrtc
     {
         this->_model_name() = "CameraStreamModel";
         // this->_view_name() = "CameraStreamView";
+    }
+
+    inline camera_stream_generator camera_facing_user(bool audio = true)
+    {
+        return camera_stream_generator().constraints({{"audio", audio}, {"video", {"facingMode", "user"}}});
+    }
+
+    inline camera_stream_generator camera_facing_environment(bool audio = true)
+    {
+        return camera_stream_generator().constraints({{"audio", audio}, {"video", {"facingMode", "environment"}}});
     }
 }
 

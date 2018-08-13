@@ -17,7 +17,8 @@
 
 #include "xwidgets/xmaterialize.hpp"
 #include "xwidgets/xholder.hpp"
-#include "xwidgets/xwidget.hpp"
+#include "xwidgets/xobject.hpp"
+#include "xwidgets/xmaker.hpp"
 
 #include "xwebrtc_config.hpp"
 #include "xmedia_stream.hpp"
@@ -30,25 +31,23 @@ namespace xwebrtc
      *********************/
 
     template <class D>
-    class xroom : public xw::xwidget<D>
+    class xroom : public xw::xobject<D>
     {
     public:
 
-        using base_type = xw::xwidget<D>;
+        using base_type = xw::xobject<D>;
         using derived_type = D;
 
-        using stream_type = xw::xholder<xmedia_stream>;
+        using stream_type = xw::xholder<xw::xtransport>;
         using stream_list_type = std::vector<stream_type>;
         using peer_list_type = std::vector<xw::xholder<xpeer>>;
 
         void serialize_state(xeus::xjson&, xeus::buffer_sequence&) const;
         void apply_patch(const xeus::xjson&, const xeus::buffer_sequence&);
 
-        void close() const;
-
         XPROPERTY(std::string, derived_type, room, "room");
         XPROPERTY(xtl::xoptional<stream_type>, derived_type, stream);
-        XPROPERTY(std::string, derived_type, id);
+        XPROPERTY(std::string, derived_type, room_id);
         XPROPERTY(std::string, derived_type, nickname, "anonymous");
         XPROPERTY(peer_list_type, derived_type, peers, {});
         XPROPERTY(stream_list_type, derived_type, streams, {});
@@ -61,6 +60,8 @@ namespace xwebrtc
     private:
 
         void set_defaults();
+
+        static int register_peers();
     };
 
     using room = xw::xmaterialize<xroom>;
@@ -74,41 +75,35 @@ namespace xwebrtc
     template <class D>
     inline void xroom<D>::serialize_state(xeus::xjson& state, xeus::buffer_sequence& buffers) const
     {
+        using xw::set_patch_from_property;
         base_type::serialize_state(state, buffers);
 
-        xw::set_patch_from_property(room, state, buffers);
-        xw::set_patch_from_property(stream, state, buffers);
-        xw::set_patch_from_property(nickname, state, buffers);
-        xw::set_patch_from_property(peers, state, buffers);
-        xw::set_patch_from_property(streams, state, buffers);
+        set_patch_from_property(room, state, buffers);
+        set_patch_from_property(stream, state, buffers);
+        set_patch_from_property(nickname, state, buffers);
+        set_patch_from_property(peers, state, buffers);
+        set_patch_from_property(streams, state, buffers);
     }
 
     template <class D>
     inline void xroom<D>::apply_patch(const xeus::xjson& patch, const xeus::buffer_sequence& buffers)
     {
+        using xw::set_property_from_patch;
         base_type::apply_patch(patch, buffers);
 
-        xw::set_property_from_patch(room, patch, buffers);
-        xw::set_property_from_patch(stream, patch, buffers);
-        xw::set_property_from_patch(id, patch, buffers);
-        xw::set_property_from_patch(nickname, patch, buffers);
-        xw::set_property_from_patch(peers, patch, buffers);
-        xw::set_property_from_patch(streams, patch, buffers);
-    }
-
-    template <class D>
-    inline void xroom<D>::close() const
-    {
-        xeus::xjson state;
-        xeus::buffer_sequence buffers;
-        state["msg"] = "close";
-        this->send(std::move(state), std::move(buffers));
+        set_property_from_patch(room, patch, buffers);
+        set_property_from_patch(stream, patch, buffers);
+        set_property_from_patch(room_id, patch, buffers);
+        set_property_from_patch(nickname, patch, buffers);
+        set_property_from_patch(peers, patch, buffers);
+        set_property_from_patch(streams, patch, buffers);
     }
 
     template <class D>
     inline xroom<D>::xroom()
         : base_type()
     {
+        static int init = register_peers();
         set_defaults();
     }
 
@@ -116,11 +111,33 @@ namespace xwebrtc
     inline void xroom<D>::set_defaults()
     {
         this->_model_module() = "jupyter-webrtc";
-        // this->_view_module() = "jupyter-webrtc";
+        this->_view_module() = "jupyter-webrtc";
         this->_model_name() = "WebRTCRoomModel";
         // this->_view_name() = "WebRTCRoomView";
         this->_model_module_version() = XJUPYTER_WEBRTC_VERSION;
-        // this->_view_module_version() = XJUPYTER_WEBRTC_VERSION;
+        this->_view_module_version() = XJUPYTER_WEBRTC_VERSION;
+    }
+
+    template <class D>
+    inline int xroom<D>::register_peers()
+    {
+        xw::get_xfactory().register_maker(
+            "jupyter-webrtc",
+            "WebRTCPeerModel",
+            "jupyter-webrtc",
+            "WebRTCPeerView",
+            xw::xmaker<xpeer>
+        );
+
+        xw::get_xfactory().register_maker(
+            "jupyter-webrtc",
+            "MediaStreamModel",
+            "jupyter-webrtc",
+            "MediaStreamView",
+            xw::xmaker<xmedia_stream>
+        );
+
+        return 0;
     }
 }
 
