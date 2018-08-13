@@ -16,6 +16,8 @@
 
 #include "xwidgets/xmaterialize.hpp"
 #include "xwidgets/xholder.hpp"
+#include "xwidgets/xobject.hpp"
+#include "xwidgets/xmaker.hpp"
 
 #include "xwebrtc_config.hpp"
 #include "xmedia_stream.hpp"
@@ -27,11 +29,11 @@ namespace xwebrtc
      *********************/
 
     template <class D>
-    class xpeer : public xmedia_stream<D>
+    class xpeer : public xw::xobject<D>
     {
     public:
 
-        using base_type = xmedia_stream<D>;
+        using base_type = xw::xobject<D>;
         using derived_type = D;
 
         using stream_type = xw::xholder<xmedia_stream>;
@@ -40,12 +42,11 @@ namespace xwebrtc
         void apply_patch(const xeus::xjson&, const xeus::buffer_sequence&);
 
         void connect() const;
-        void close() const;
 
         XPROPERTY(xtl::xoptional<stream_type>, derived_type, stream_local);
         XPROPERTY(xtl::xoptional<stream_type>, derived_type, stream_remote);
-        XPROPERTY(xtl::xoptional<std::string>, derived_type, id_local);
-        XPROPERTY(xtl::xoptional<std::string>, derived_type, id_remote);
+        XPROPERTY(std::string, derived_type, id_local);
+        XPROPERTY(std::string, derived_type, id_remote);
         XPROPERTY(bool, derived_type, connected, false);
         XPROPERTY(bool, derived_type, failed, false);
 
@@ -57,6 +58,8 @@ namespace xwebrtc
     private:
 
         void set_defaults();
+
+        static int register_media_streams();
     };
 
     using peer = xw::xmaterialize<xpeer>;
@@ -101,26 +104,36 @@ namespace xwebrtc
     }
 
     template <class D>
-    inline void xpeer<D>::close() const
-    {
-        xeus::xjson state;
-        xeus::buffer_sequence buffers;
-        state["msg"] = "close";
-        this->send(std::move(state), std::move(buffers));
-    }
-
-    template <class D>
     inline xpeer<D>::xpeer()
         : base_type()
     {
+        static int init = register_media_streams();
         set_defaults();
     }
 
     template <class D>
     inline void xpeer<D>::set_defaults()
     {
+        this->_model_module() = "jupyter-webrtc";
+        this->_view_module() = "jupyter-webrtc";
         this->_model_name() = "WebRTCPeerModel";
         this->_view_name() = "WebRTCPeerView";
+        this->_model_module_version() = XJUPYTER_WEBRTC_VERSION;
+        this->_view_module_version() = XJUPYTER_WEBRTC_VERSION;
+    }
+
+    template <class D>
+    inline int xpeer<D>::register_media_streams()
+    {
+        xw::get_xfactory().register_maker(
+            "jupyter-webrtc",
+            "MediaStreamModel",
+            "jupyter-webrtc",
+            "MediaStreamView",
+            xw::xmaker<xmedia_stream>
+        );
+
+        return 0;
     }
 }
 
