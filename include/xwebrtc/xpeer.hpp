@@ -73,25 +73,27 @@ namespace xwebrtc
     template <class D>
     inline void xpeer<D>::serialize_state(xeus::xjson& state, xeus::buffer_sequence& buffers) const
     {
+        using xw::set_patch_from_property;
         base_type::serialize_state(state, buffers);
 
-        xw::set_patch_from_property(stream_local, state, buffers);
-        xw::set_patch_from_property(stream_remote, state, buffers);
-        xw::set_patch_from_property(id_local, state, buffers);
-        xw::set_patch_from_property(id_remote, state, buffers);
+        set_patch_from_property(stream_local, state, buffers);
+        set_patch_from_property(stream_remote, state, buffers);
+        set_patch_from_property(id_local, state, buffers);
+        set_patch_from_property(id_remote, state, buffers);
     }
 
     template <class D>
     inline void xpeer<D>::apply_patch(const xeus::xjson& patch, const xeus::buffer_sequence& buffers)
     {
+        using xw::set_property_from_patch;
         base_type::apply_patch(patch, buffers);
 
-        xw::set_property_from_patch(stream_local, patch, buffers);
-        xw::set_property_from_patch(stream_remote, patch, buffers);
-        xw::set_property_from_patch(id_local, patch, buffers);
-        xw::set_property_from_patch(id_remote, patch, buffers);
-        xw::set_property_from_patch(connected, patch, buffers);
-        xw::set_property_from_patch(failed, patch, buffers);
+        set_property_from_patch(stream_local, patch, buffers);
+        set_property_from_patch(stream_remote, patch, buffers);
+        set_property_from_patch(id_local, patch, buffers);
+        set_property_from_patch(id_remote, patch, buffers);
+        set_property_from_patch(connected, patch, buffers);
+        set_property_from_patch(failed, patch, buffers);
     }
 
     template <class D>

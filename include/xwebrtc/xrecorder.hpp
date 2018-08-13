@@ -75,14 +75,15 @@ namespace xwebrtc
     template <class D>
     inline void xrecorder<D>::serialize_state(xeus::xjson& state, xeus::buffer_sequence& buffers) const
     {
+        using xw::set_patch_from_property;
         base_type::serialize_state(state, buffers);
 
-        xw::set_patch_from_property(stream, state, buffers);
-        xw::set_patch_from_property(filename, state, buffers);
-        xw::set_patch_from_property(format, state, buffers);
-        xw::set_patch_from_property(recording, state, buffers);
-        xw::set_patch_from_property(autosave, state, buffers);
-        xw::set_patch_from_property(_data_src, state, buffers);
+        set_patch_from_property(stream, state, buffers);
+        set_patch_from_property(filename, state, buffers);
+        set_patch_from_property(format, state, buffers);
+        set_patch_from_property(recording, state, buffers);
+        set_patch_from_property(autosave, state, buffers);
+        set_patch_from_property(_data_src, state, buffers);
     }
 
     template <class D>

@@ -63,19 +63,21 @@ namespace xwebrtc
     template <class D>
     inline void xwidget_stream<D>::serialize_state(xeus::xjson& state, xeus::buffer_sequence& buffers) const
     {
+        using xw::set_patch_from_property;
         base_type::serialize_state(state, buffers);
 
-        xw::set_patch_from_property(widget, state, buffers);
-        xw::set_patch_from_property(max_fps, state, buffers);
+        set_patch_from_property(widget, state, buffers);
+        set_patch_from_property(max_fps, state, buffers);
     }
 
     template <class D>
     inline void xwidget_stream<D>::apply_patch(const xeus::xjson& patch, const xeus::buffer_sequence& buffers)
     {
+        using xw::set_property_from_patch;
         base_type::apply_patch(patch, buffers);
 
-        xw::set_property_from_patch(widget, patch, buffers);
-        xw::set_property_from_patch(max_fps, patch, buffers);
+        set_property_from_patch(widget, patch, buffers);
+        set_property_from_patch(max_fps, patch, buffers);
     }
 
     template <class D>

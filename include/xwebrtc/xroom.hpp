@@ -75,26 +75,28 @@ namespace xwebrtc
     template <class D>
     inline void xroom<D>::serialize_state(xeus::xjson& state, xeus::buffer_sequence& buffers) const
     {
+        using xw::set_patch_from_property;
         base_type::serialize_state(state, buffers);
 
-        xw::set_patch_from_property(room, state, buffers);
-        xw::set_patch_from_property(stream, state, buffers);
-        xw::set_patch_from_property(nickname, state, buffers);
-        xw::set_patch_from_property(peers, state, buffers);
-        xw::set_patch_from_property(streams, state, buffers);
+        set_patch_from_property(room, state, buffers);
+        set_patch_from_property(stream, state, buffers);
+        set_patch_from_property(nickname, state, buffers);
+        set_patch_from_property(peers, state, buffers);
+        set_patch_from_property(streams, state, buffers);
     }
 
     template <class D>
     inline void xroom<D>::apply_patch(const xeus::xjson& patch, const xeus::buffer_sequence& buffers)
     {
+        using xw::set_property_from_patch;
         base_type::apply_patch(patch, buffers);
 
-        xw::set_property_from_patch(room, patch, buffers);
-        xw::set_property_from_patch(stream, patch, buffers);
-        xw::set_property_from_patch(room_id, patch, buffers);
-        xw::set_property_from_patch(nickname, patch, buffers);
-        xw::set_property_from_patch(peers, patch, buffers);
-        xw::set_property_from_patch(streams, patch, buffers);
+        set_property_from_patch(room, patch, buffers);
+        set_property_from_patch(stream, patch, buffers);
+        set_property_from_patch(room_id, patch, buffers);
+        set_property_from_patch(nickname, patch, buffers);
+        set_property_from_patch(peers, patch, buffers);
+        set_property_from_patch(streams, patch, buffers);
     }
 
     template <class D>

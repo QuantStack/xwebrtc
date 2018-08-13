@@ -57,17 +57,19 @@ namespace xwebrtc
     template <class D>
     inline void xcamera_stream<D>::serialize_state(xeus::xjson& state, xeus::buffer_sequence& buffers) const
     {
+        using xw::set_patch_from_property;
         base_type::serialize_state(state, buffers);
 
-        xw::set_patch_from_property(constraints, state, buffers);
+        set_patch_from_property(constraints, state, buffers);
     }
 
     template <class D>
     inline void xcamera_stream<D>::apply_patch(const xeus::xjson& patch, const xeus::buffer_sequence& buffers)
     {
+        using xw::set_property_from_patch;
         base_type::apply_patch(patch, buffers);
 
-        xw::set_property_from_patch(constraints, patch, buffers);
+        set_property_from_patch(constraints, patch, buffers);
     }
 
     template <class D>

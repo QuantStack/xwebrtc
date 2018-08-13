@@ -71,23 +71,25 @@ namespace xwebrtc
     template <class D>
     inline void ximage_recorder<D>::serialize_state(xeus::xjson& state, xeus::buffer_sequence& buffers) const
     {
+        using xw::set_patch_from_property;
         base_type::serialize_state(state, buffers);
 
-        xw::set_patch_from_property(image, state, buffers);
-        xw::set_patch_from_property(format, state, buffers);
-        xw::set_patch_from_property(_width, state, buffers);
-        xw::set_patch_from_property(_height, state, buffers);
+        set_patch_from_property(image, state, buffers);
+        set_patch_from_property(format, state, buffers);
+        set_patch_from_property(_width, state, buffers);
+        set_patch_from_property(_height, state, buffers);
     }
 
     template <class D>
     inline void ximage_recorder<D>::apply_patch(const xeus::xjson& patch, const xeus::buffer_sequence& buffers)
     {
+        using xw::set_property_from_patch;
         base_type::apply_patch(patch, buffers);
 
-        xw::set_property_from_patch(image, patch, buffers);
-        xw::set_property_from_patch(format, patch, buffers);
-        xw::set_property_from_patch(_width, patch, buffers);
-        xw::set_property_from_patch(_height, patch, buffers);
+        set_property_from_patch(image, patch, buffers);
+        set_property_from_patch(format, patch, buffers);
+        set_property_from_patch(_width, patch, buffers);
+        set_property_from_patch(_height, patch, buffers);
     }
 
     template <class D>
