@@ -1,5 +1,8 @@
 # xwebrtc
 
+[![Travis](https://travis-ci.org/QuantStack/xwebrtc.svg?branch=master)](https://travis-ci.org/QuantStack/xwebrtc)
+[![Appveyor](https://ci.appveyor.com/api/projects/status/5vjulggfcaknmxsh?svg=true)](https://ci.appveyor.com/project/QuantStack/xwebrtc/branch/master)
+
 C++ backend for WebRTC in the Jupyter notebook/lab
 
 **xwebrtc is an early developer preview, and is not suitable for general usage yet. Features and implementation are subject to change.**
