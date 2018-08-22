@@ -38,7 +38,7 @@ namespace xwebrtc
         using base_type = xw::xobject<D>;
         using derived_type = D;
 
-        using stream_type = xw::xholder<xw::xtransport>;
+        using stream_type = xw::xholder<xmedia_stream>;
         using stream_list_type = std::vector<stream_type>;
         using peer_list_type = std::vector<xw::xholder<xpeer>>;
 

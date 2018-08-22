@@ -43,10 +43,8 @@ namespace xwebrtc
     protected:
 
         xaudio_recorder();
-        template <class T>
-        xaudio_recorder(const xmedia_stream<T>& audio);
-        template <class T>
-        xaudio_recorder(xmedia_stream<T>&& audio);
+        xaudio_recorder(const xw::xholder<xmedia_stream>& audio);
+        xaudio_recorder(xw::xholder<xmedia_stream>&& audio);
         // template <class T>
         // xaudio_recorder(xaudio_recorder<T>&& rhs) noexcept;
         using base_type::base_type;
@@ -99,8 +97,7 @@ namespace xwebrtc
     }
 
     template <class D>
-    template <class T>
-    inline xaudio_recorder<D>::xaudio_recorder(xmedia_stream<T>&& audio)
+    inline xaudio_recorder<D>::xaudio_recorder(xw::xholder<xmedia_stream>&& audio)
         : base_type()
     {
         this->stream() = std::move(audio);
@@ -111,8 +108,7 @@ namespace xwebrtc
     }
 
     template <class D>
-    template <class T>
-    inline xaudio_recorder<D>::xaudio_recorder(const xmedia_stream<T>& audio)
+    inline xaudio_recorder<D>::xaudio_recorder(const xw::xholder<xmedia_stream>& audio)
         : base_type()
     {
         this->stream() = audio;
