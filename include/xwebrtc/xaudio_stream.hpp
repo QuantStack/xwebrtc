@@ -45,8 +45,7 @@ namespace xwebrtc
     protected:
 
         xaudio_stream();
-        xaudio_stream(const xw::xholder<xw::xaudio>& audio);
-        xaudio_stream(xw::xholder<xw::xaudio>&& audio);
+        xaudio_stream(xw::xholder<xw::xaudio> audio);
         using base_type::base_type;
 
     private:
@@ -90,21 +89,12 @@ namespace xwebrtc
     }
 
     template <class D>
-    inline xaudio_stream<D>::xaudio_stream(const xw::xholder<xw::xaudio>& audio)
+    inline xaudio_stream<D>::xaudio_stream(xw::xholder<xw::xaudio> audio)
     : base_type()
     {
         set_defaults();
 
         this->audio() = audio;
-    }
-
-    template <class D>
-    inline xaudio_stream<D>::xaudio_stream(xw::xholder<xw::xaudio>&& audio)
-        : base_type()
-    {
-        set_defaults();
-
-        this->audio() = std::move(audio);
     }
 
     template <class D>

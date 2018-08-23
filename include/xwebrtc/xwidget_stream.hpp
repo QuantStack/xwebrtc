@@ -43,6 +43,7 @@ namespace xwebrtc
     protected:
 
         xwidget_stream();
+        xwidget_stream(xw::xholder<xw::xwidget> widget);
         using base_type::base_type;
 
     private:
@@ -87,6 +88,17 @@ namespace xwebrtc
         set_defaults();
 
         setup_properties();
+    }
+
+    template <class D>
+    inline xwidget_stream<D>::xwidget_stream(xw::xholder<xw::xwidget> widget)
+        : base_type()
+    {
+        set_defaults();
+
+        setup_properties();
+
+        this->widget() = widget;
     }
 
     template <class D>

@@ -43,8 +43,7 @@ namespace xwebrtc
     protected:
 
         ximage_stream();
-        ximage_stream(const xw::xholder<xw::ximage>& image);
-        ximage_stream(xw::xholder<xw::ximage>&& image);
+        ximage_stream(xw::xholder<xw::ximage> image);
         using base_type::base_type;
 
     private:
@@ -86,21 +85,12 @@ namespace xwebrtc
     }
 
     template <class D>
-    inline ximage_stream<D>::ximage_stream(const xw::xholder<xw::ximage>& image)
+    inline ximage_stream<D>::ximage_stream(xw::xholder<xw::ximage> image)
         : base_type()
     {
         set_defaults();
 
         this->image() = image;
-    }
-
-    template <class D>
-    inline ximage_stream<D>::ximage_stream(xw::xholder<xw::ximage>&& image)
-        : base_type()
-    {
-        set_defaults();
-
-        this->image() = std::move(image);
     }
 
     template <class D>

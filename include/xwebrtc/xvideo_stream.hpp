@@ -45,8 +45,7 @@ namespace xwebrtc
     protected:
 
         xvideo_stream();
-        xvideo_stream(const xw::xholder<xw::xvideo>& video);
-        xvideo_stream(xw::xholder<xw::xvideo>&& video);
+        xvideo_stream(xw::xholder<xw::xvideo> video);
         using base_type::base_type;
 
     private:
@@ -90,21 +89,12 @@ namespace xwebrtc
     }
 
     template <class D>
-    inline xvideo_stream<D>::xvideo_stream(const xw::xholder<xw::xvideo>& video)
-    : base_type()
-    {
-        set_defaults();
-
-        this->video() = video;
-    }
-
-    template <class D>
-    inline xvideo_stream<D>::xvideo_stream(xw::xholder<xw::xvideo>&& video)
+    inline xvideo_stream<D>::xvideo_stream(xw::xholder<xw::xvideo> video)
         : base_type()
     {
         set_defaults();
 
-        this->video() = std::move(video);
+        this->video() = video;
     }
 
     template <class D>

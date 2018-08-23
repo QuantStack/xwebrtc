@@ -46,10 +46,7 @@ namespace xwebrtc
     protected:
 
         ximage_recorder();
-        ximage_recorder(const xw::xholder<xmedia_stream>& video);
-        ximage_recorder(xw::xholder<xmedia_stream>&& video);
-        // template <class T>
-        // ximage_recorder(ximage_recorder<T>&& rhs) noexcept;
+        ximage_recorder(xw::xholder<xmedia_stream> video);
         using base_type::base_type;
 
     private:
@@ -106,18 +103,7 @@ namespace xwebrtc
     }
 
     template <class D>
-    inline ximage_recorder<D>::ximage_recorder(xw::xholder<xmedia_stream>&& video)
-        : base_type()
-    {
-        this->stream() = std::move(video);
-
-        set_defaults();
-
-        this->setup_properties();
-    }
-
-    template <class D>
-    inline ximage_recorder<D>::ximage_recorder(const xw::xholder<xmedia_stream>& video)
+    inline ximage_recorder<D>::ximage_recorder(xw::xholder<xmedia_stream> video)
         : base_type()
     {
         this->stream() = video;
