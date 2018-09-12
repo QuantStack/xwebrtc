@@ -7,6 +7,12 @@ C++ backend for WebRTC in the Jupyter notebook/lab
 
 **xwebrtc is an early developer preview, and is not suitable for general usage yet. Features and implementation are subject to change.**
 
+## Trying it online
+
+To try out xwebrtc interactively in your web browser, just click on the binder link:
+
+[![Binder](docs/source/binder-logo.svg)](https://mybinder.org/v2/gh/QuantStack/xwebrtc/stable?filepath=notebooks)
+
 ## Installation
 
 We provide a package for the conda package manager.
