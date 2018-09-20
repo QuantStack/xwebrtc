@@ -2,6 +2,7 @@
 
 [![Travis](https://travis-ci.org/QuantStack/xwebrtc.svg?branch=master)](https://travis-ci.org/QuantStack/xwebrtc)
 [![Appveyor](https://ci.appveyor.com/api/projects/status/5vjulggfcaknmxsh?svg=true)](https://ci.appveyor.com/project/QuantStack/xwebrtc/branch/master)
+[![Binder](https://img.shields.io/badge/launch-binder-brightgreen.svg)](https://mybinder.org/v2/gh/QuantStack/xwebrtc/stable?filepath=notebooks)
 
 C++ backend for WebRTC in the Jupyter notebook/lab
 

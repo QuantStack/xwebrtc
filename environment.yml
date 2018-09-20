@@ -9,3 +9,6 @@ dependencies:
   - ipywebrtc=0.4.1
   - notebook >=5.4
   - widgetsnbextension >=3.0.0
+  - xtensor-io=0.5.1
+  - xtensor-fftw=0.2.5
+  - openimageio=1.8.9
