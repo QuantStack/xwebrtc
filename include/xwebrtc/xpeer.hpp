@@ -120,8 +120,8 @@ namespace xwebrtc
         this->_view_module() = "jupyter-webrtc";
         this->_model_name() = "WebRTCPeerModel";
         this->_view_name() = "WebRTCPeerView";
-        this->_model_module_version() = XJUPYTER_WEBRTC_VERSION;
-        this->_view_module_version() = XJUPYTER_WEBRTC_VERSION;
+        this->_model_module_version() = ipywebrtc_semver();
+        this->_view_module_version() = ipywebrtc_semver();
     }
 
     template <class D>

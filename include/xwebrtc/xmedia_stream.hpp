@@ -76,8 +76,8 @@ namespace xwebrtc
         this->_view_module() = "jupyter-webrtc";
         this->_model_name() = "MediaStreamModel";
         this->_view_name() = "MediaStreamView";
-        this->_model_module_version() = XJUPYTER_WEBRTC_VERSION;
-        this->_view_module_version() = XJUPYTER_WEBRTC_VERSION;
+        this->_model_module_version() = ipywebrtc_semver();
+        this->_view_module_version() = ipywebrtc_semver();
     }
 }
 

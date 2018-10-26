@@ -23,8 +23,8 @@
 
 // Project version
 #define XWEBRTC_VERSION_MAJOR 0
-#define XWEBRTC_VERSION_MINOR 1
-#define XWEBRTC_VERSION_PATCH 1
+#define XWEBRTC_VERSION_MINOR 2
+#define XWEBRTC_VERSION_PATCH 0
 
 // Binary version
 #define XWEBRTC_BINARY_CURRENT 1
@@ -45,6 +45,11 @@
 #define XJUPYTER_WEBRTC_VERSION XWEBRTC_STRINGIFY(XWEBRTC_CONCATENATE(XJUPYTER_WEBRTC_VERSION_MAJOR,   \
                              XWEBRTC_CONCATENATE(.,XWEBRTC_CONCATENATE(XJUPYTER_WEBRTC_VERSION_MINOR,   \
                                                   XWEBRTC_CONCATENATE(.,XJUPYTER_WEBRTC_VERSION_PATCH)))))
+
+inline std::string ipywebrtc_semver()
+{
+    return std::string("^") + XJUPYTER_WEBRTC_VERSION;
+}
 
 #ifdef __CLING__
 #include "xwebrtc_config_cling.hpp"
