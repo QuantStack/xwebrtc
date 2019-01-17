@@ -46,7 +46,7 @@
                              XWEBRTC_CONCATENATE(.,XWEBRTC_CONCATENATE(XJUPYTER_WEBRTC_VERSION_MINOR,   \
                                                   XWEBRTC_CONCATENATE(.,XJUPYTER_WEBRTC_VERSION_PATCH)))))
 
-inline std::string ipywebrtc_semver()
+inline std::string jupyter_webrtc_semver()
 {
     return std::string("^") + XJUPYTER_WEBRTC_VERSION;
 }

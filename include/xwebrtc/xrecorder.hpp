@@ -157,8 +157,8 @@ namespace xwebrtc
     {
         this->_model_module() = "jupyter-webrtc";
         this->_view_module() = "jupyter-webrtc";
-        this->_model_module_version() = ipywebrtc_semver();
-        this->_view_module_version() = ipywebrtc_semver();
+        this->_model_module_version() = jupyter_webrtc_semver();
+        this->_view_module_version() = jupyter_webrtc_semver();
     }
 }
 
