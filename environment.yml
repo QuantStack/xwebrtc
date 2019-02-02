@@ -4,8 +4,8 @@ channels:
   - conda-forge
 dependencies:
   - xwebrtc=0.4.0
-  - xwidgets=0.16.0
-  - xeus-cling=0.4.10
+  - xwidgets=0.16.1
+  - xeus-cling=0.4.11
   - ipywebrtc=0.4.1
   - notebook >=5.4
   - widgetsnbextension >=3.0.0
