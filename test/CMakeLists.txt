@@ -15,8 +15,8 @@ set(CMAKE_BUILD_TYPE Release CACHE STRING "Choose the type of build." FORCE)
 if (CMAKE_CURRENT_SOURCE_DIR STREQUAL CMAKE_SOURCE_DIR)
     project(xwebrtc-test)
 
-    find_package(xwidgets REQUIRED CONFIG)
-    set(XWIDGETS_INCLUDE_DIR ${xwidgets_INCLUDE_DIRS})
+    find_package(xwebrtc REQUIRED CONFIG)
+    set(XWEBRTC_INCLUDE_DIR ${xwebrtc_INCLUDE_DIRS})
 endif ()
 
 # Dependencies
@@ -46,7 +46,7 @@ if(DOWNLOAD_GTEST OR GTEST_SRC_DIR)
     # Add googletest directly to our build. This defines
     # the gtest and gtest_main targets.
     add_subdirectory(${CMAKE_CURRENT_BINARY_DIR}/googletest-src
-                     ${CMAKE_CURRENT_BINARY_DIR}/googletest-build)
+                     ${CMAKE_CURRENT_BINARY_DIR}/googletest-build EXCLUDE_FROM_ALL)
 
     set(GTEST_INCLUDE_DIRS "${gtest_SOURCE_DIR}/include")
     set(GTEST_BOTH_LIBRARIES  gtest_main gtest)
@@ -79,19 +79,17 @@ if("${isSystemDir}" STREQUAL "-1")
     set(CMAKE_INSTALL_RPATH "${CMAKE_INSTALL_PREFIX}/lib")
 endif("${isSystemDir}" STREQUAL "-1")
 
-set(XWEBRTC_TEST_TARGET test_xwebrtc)
-
-add_executable(${XWEBRTC_TEST_TARGET} ${XWEBRTC_TESTS} ${XWEBRTC_HEADERS})
+add_executable(test_xwebrtc ${XWEBRTC_TESTS} ${XWEBRTC_HEADERS})
 if(DOWNLOAD_GTEST OR GTEST_SRC_DIR)
-    add_dependencies(${XWEBRTC_TEST_TARGET} gtest_main)
+    add_dependencies(test_xwebrtc gtest_main)
 endif()
 
-target_compile_features(${XWEBRTC_TEST_TARGET} PRIVATE cxx_std_14)
+target_compile_features(test_xwebrtc PRIVATE cxx_std_14)
 
-target_link_libraries(${XWEBRTC_TEST_TARGET}
-                        PUBLIC xtl
-                        PUBLIC xeus
-                        PUBLIC xwidgets
-                        PUBLIC xwebrtc
-                        PRIVATE ${GTEST_BOTH_LIBRARIES}
-                        PRIVATE ${CMAKE_THREAD_LIBS_INIT})
+target_link_libraries(test_xwebrtc
+                      PUBLIC xtl
+                      PUBLIC xeus
+                      PUBLIC xwidgets
+                      PUBLIC xwebrtc
+                      PRIVATE ${GTEST_BOTH_LIBRARIES}
+                      PRIVATE ${CMAKE_THREAD_LIBS_INIT})
