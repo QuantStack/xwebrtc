@@ -3,7 +3,7 @@ channels:
   - QuantStack
   - conda-forge
 dependencies:
-  - xwebrtc=0.4.0
+  - xwebrtc=0.4.1
   - xwidgets=0.16.1
   - xeus-cling=0.4.11
   - ipywebrtc=0.4.1

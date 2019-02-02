@@ -21,7 +21,7 @@ We provide a package for the conda package manager.
 - Installing `xwebrtc` and the C++ kernel
 
 ```bash
-conda install xeus-cling xwebrtc -c QuantStack -c conda-forge
+conda install xeus-cling xwebrtc -c conda-forge
 ```
 
 Then, the front-end extension must be installed for either the classic notebook or JupyterLab.
@@ -48,7 +48,8 @@ All the dependencies of xleaflet are available for the conda package manager.
 
 | `xwebrtc`  | `xwidgets`  |  `xeus`         |
 |------------|-------------|-----------------|
-|  master    |   ~0.16.0   |  ~0.18.1        |
+|  master    |   ~0.16.1   |  ~0.18.1        |
+|  0.4.1     |   ~0.16.1   |  ~0.18.1        |
 |  0.4.0     |   ~0.16.0   |  ~0.18.1        |
 |  0.3.0     |   ~0.15.0   |  ~0.17.0        |
 |  0.2.0     |   ~0.14.0   |  ~0.15.0        |
