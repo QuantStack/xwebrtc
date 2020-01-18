@@ -10,12 +10,14 @@
 #ifndef XWEBRTC_CAMERA_STREAM_HPP
 #define XWEBRTC_CAMERA_STREAM_HPP
 
-#include <string>
+#include "nlohmann/json.hpp"
 
 #include "xwidgets/xmaterialize.hpp"
 
 #include "xwebrtc_config.hpp"
 #include "xmedia_stream.hpp"
+
+namespace nl = nlohmann;
 
 namespace xwebrtc
 {
@@ -31,10 +33,10 @@ namespace xwebrtc
         using base_type = xwebrtc::xmedia_stream<D>;
         using derived_type = D;
 
-        void serialize_state(xeus::xjson&, xeus::buffer_sequence&) const;
-        void apply_patch(const xeus::xjson&, const xeus::buffer_sequence&);
+        void serialize_state(nl::json&, xeus::buffer_sequence&) const;
+        void apply_patch(const nl::json&, const xeus::buffer_sequence&);
 
-        XPROPERTY(xeus::xjson, derived_type, constraints);
+        XPROPERTY(nl::json, derived_type, constraints);
 
     protected:
 
@@ -48,23 +50,21 @@ namespace xwebrtc
 
     using camera_stream = xw::xmaterialize<xcamera_stream>;
 
-    using camera_stream_generator = xw::xgenerator<xcamera_stream>;
-
     /*********************************
      * xcamera_stream implementation *
      *********************************/
 
     template <class D>
-    inline void xcamera_stream<D>::serialize_state(xeus::xjson& state, xeus::buffer_sequence& buffers) const
+    inline void xcamera_stream<D>::serialize_state(nl::json& state, xeus::buffer_sequence& buffers) const
     {
-        using xw::set_patch_from_property;
+        using xw::xwidgets_serialize;
         base_type::serialize_state(state, buffers);
 
-        set_patch_from_property(constraints, state, buffers);
+        xwidgets_serialize(constraints(), state["constraints"], buffers);
     }
 
     template <class D>
-    inline void xcamera_stream<D>::apply_patch(const xeus::xjson& patch, const xeus::buffer_sequence& buffers)
+    inline void xcamera_stream<D>::apply_patch(const nl::json& patch, const xeus::buffer_sequence& buffers)
     {
         using xw::set_property_from_patch;
         base_type::apply_patch(patch, buffers);
@@ -88,14 +88,14 @@ namespace xwebrtc
         // this->_view_name() = "CameraStreamView";
     }
 
-    inline camera_stream_generator camera_facing_user(bool audio = true)
+    inline camera_stream camera_facing_user(bool audio = true)
     {
-        return camera_stream_generator().constraints({{"audio", audio}, {"video", {"facingMode", "user"}}});
+        return camera_stream::initialize().constraints({{"audio", audio}, {"video", {"facingMode", "user"}}});
     }
 
-    inline camera_stream_generator camera_facing_environment(bool audio = true)
+    inline camera_stream camera_facing_environment(bool audio = true)
     {
-        return camera_stream_generator().constraints({{"audio", audio}, {"video", {"facingMode", "environment"}}});
+        return camera_stream::initialize().constraints({{"audio", audio}, {"video", {"facingMode", "environment"}}});
     }
 }
 
@@ -107,9 +107,6 @@ namespace xwebrtc
     extern template class xw::xmaterialize<xwebrtc::xcamera_stream>;
     extern template xw::xmaterialize<xwebrtc::xcamera_stream>::xmaterialize();
     extern template class xw::xtransport<xw::xmaterialize<xwebrtc::xcamera_stream>>;
-    extern template class xw::xgenerator<xwebrtc::xcamera_stream>;
-    extern template xw::xgenerator<xwebrtc::xcamera_stream>::xgenerator();
-    extern template class xw::xtransport<xw::xgenerator<xwebrtc::xcamera_stream>>;
 #endif
 
 #endif

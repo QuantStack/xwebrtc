@@ -11,13 +11,17 @@
 #define XWEBRTC_IMAGE_STREAM_HPP
 
 #include <string>
-#include <stdexcept>
+#include <utility>
+
+#include "nlohmann/json.hpp"
 
 #include "xwidgets/xmaterialize.hpp"
 #include "xwidgets/ximage.hpp"
 
 #include "xwebrtc_config.hpp"
 #include "xmedia_stream.hpp"
+
+namespace nl = nlohmann;
 
 namespace xwebrtc
 {
@@ -35,8 +39,8 @@ namespace xwebrtc
 
         using image_type = xw::xholder<xw::ximage>;
 
-        void serialize_state(xeus::xjson&, xeus::buffer_sequence&) const;
-        void apply_patch(const xeus::xjson&, const xeus::buffer_sequence&);
+        void serialize_state(nl::json&, xeus::buffer_sequence&) const;
+        void apply_patch(const nl::json&, const xeus::buffer_sequence&);
 
         XPROPERTY(image_type, derived_type, image);
 
@@ -53,23 +57,21 @@ namespace xwebrtc
 
     using image_stream = xw::xmaterialize<ximage_stream>;
 
-    using image_stream_generator = xw::xgenerator<ximage_stream>;
-
     /********************************
      * ximage_stream implementation *
      ********************************/
 
     template <class D>
-    inline void ximage_stream<D>::serialize_state(xeus::xjson& state, xeus::buffer_sequence& buffers) const
+    inline void ximage_stream<D>::serialize_state(nl::json& state, xeus::buffer_sequence& buffers) const
     {
-        using xw::set_patch_from_property;
+        using xw::xwidgets_serialize;
         base_type::serialize_state(state, buffers);
 
-        set_patch_from_property(image, state, buffers);
+        xwidgets_serialize(image(), state["image"], buffers);
     }
 
     template <class D>
-    inline void ximage_stream<D>::apply_patch(const xeus::xjson& patch, const xeus::buffer_sequence& buffers)
+    inline void ximage_stream<D>::apply_patch(const nl::json& patch, const xeus::buffer_sequence& buffers)
     {
         using xw::set_property_from_patch;
         base_type::apply_patch(patch, buffers);
@@ -100,16 +102,16 @@ namespace xwebrtc
         // this->_view_name() = "ImageStreamView";
     }
 
-    inline image_stream_generator image_stream_from_file(const std::string& filename)
+    inline image_stream image_stream_from_file(const std::string& filename)
     {
         auto img = xw::image_from_file(filename).finalize();
-        return image_stream_generator().image(std::move(img));
+        return image_stream::initialize().image(std::move(img));
     }
 
-    inline image_stream_generator image_stream_from_url(const std::string& url)
+    inline image_stream image_stream_from_url(const std::string& url)
     {
         auto img = xw::image_from_url(url).finalize();
-        return image_stream_generator().image(std::move(img));
+        return image_stream::initialize().image(std::move(img));
     }
 }
 
@@ -121,9 +123,6 @@ namespace xwebrtc
     extern template class xw::xmaterialize<xwebrtc::ximage_stream>;
     extern template xw::xmaterialize<xwebrtc::ximage_stream>::xmaterialize();
     extern template class xw::xtransport<xw::xmaterialize<xwebrtc::ximage_stream>>;
-    extern template class xw::xgenerator<xwebrtc::ximage_stream>;
-    extern template xw::xgenerator<xwebrtc::ximage_stream>::xgenerator();
-    extern template class xw::xtransport<xw::xgenerator<xwebrtc::ximage_stream>>;
 #endif
 
 #endif

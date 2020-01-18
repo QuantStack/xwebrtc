@@ -10,6 +10,8 @@
 #ifndef XWEBRTC_ROOM_LOCAL_HPP
 #define XWEBRTC_ROOM_LOCAL_HPP
 
+#include "nlohmann/json.hpp"
+
 #include "xtl/xoptional.hpp"
 
 #include "xwidgets/xmaterialize.hpp"
@@ -17,6 +19,8 @@
 
 #include "xwebrtc_config.hpp"
 #include "xroom.hpp"
+
+namespace nl = nlohmann;
 
 namespace xwebrtc
 {
@@ -32,8 +36,8 @@ namespace xwebrtc
         using base_type = xroom<D>;
         using derived_type = D;
 
-        void serialize_state(xeus::xjson&, xeus::buffer_sequence&) const;
-        void apply_patch(const xeus::xjson&, const xeus::buffer_sequence&);
+        void serialize_state(nl::json&, xeus::buffer_sequence&) const;
+        void apply_patch(const nl::json&, const xeus::buffer_sequence&);
 
     protected:
 
@@ -47,20 +51,18 @@ namespace xwebrtc
 
     using room_local = xw::xmaterialize<xroom_local>;
 
-    using room_local_generator = xw::xgenerator<xroom_local>;
-
     /******************************
      * xroom_local implementation *
      ******************************/
 
     template <class D>
-    inline void xroom_local<D>::serialize_state(xeus::xjson& state, xeus::buffer_sequence& buffers) const
+    inline void xroom_local<D>::serialize_state(nl::json& state, xeus::buffer_sequence& buffers) const
     {
         base_type::serialize_state(state, buffers);
     }
 
     template <class D>
-    inline void xroom_local<D>::apply_patch(const xeus::xjson& patch, const xeus::buffer_sequence& buffers)
+    inline void xroom_local<D>::apply_patch(const nl::json& patch, const xeus::buffer_sequence& buffers)
     {
         base_type::apply_patch(patch, buffers);
     }
@@ -88,9 +90,6 @@ namespace xwebrtc
     extern template class xw::xmaterialize<xwebrtc::xroom_local>;
     extern template xw::xmaterialize<xwebrtc::xroom_local>::xmaterialize();
     extern template class xw::xtransport<xw::xmaterialize<xwebrtc::xroom_local>>;
-    extern template class xw::xgenerator<xwebrtc::xroom_local>;
-    extern template xw::xgenerator<xwebrtc::xroom_local>::xgenerator();
-    extern template class xw::xtransport<xw::xgenerator<xwebrtc::xroom_local>>;
 #endif
 
 #endif

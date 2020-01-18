@@ -11,13 +11,16 @@
 #define XWEBRTC_VIDEO_RECORDER_HPP
 
 #include <string>
-#include <vector>
+
+#include "nlohmann/json.hpp"
 
 #include "xwidgets/xmaterialize.hpp"
 #include "xwidgets/xvideo.hpp"
 
 #include "xrecorder.hpp"
 #include "xwebrtc_config.hpp"
+
+namespace nl = nlohmann;
 
 namespace xwebrtc
 {
@@ -33,8 +36,8 @@ namespace xwebrtc
         using base_type = xrecorder<D>;
         using derived_type = D;
 
-        void serialize_state(xeus::xjson&, xeus::buffer_sequence&) const;
-        void apply_patch(const xeus::xjson&, const xeus::buffer_sequence&);
+        void serialize_state(nl::json&, xeus::buffer_sequence&) const;
+        void apply_patch(const nl::json&, const xeus::buffer_sequence&);
 
         XPROPERTY(xw::video, derived_type, video);
 
@@ -54,23 +57,21 @@ namespace xwebrtc
 
     using video_recorder = xw::xmaterialize<xvideo_recorder>;
 
-    using video_recorder_generator = xw::xgenerator<xvideo_recorder>;
-
     /**********************************
      * xvideo_recorder implementation *
      **********************************/
 
     template <class D>
-    inline void xvideo_recorder<D>::serialize_state(xeus::xjson& state, xeus::buffer_sequence& buffers) const
+    inline void xvideo_recorder<D>::serialize_state(nl::json& state, xeus::buffer_sequence& buffers) const
     {
-        using xw::set_patch_from_property;
+        using xw::xwidgets_serialize;
         base_type::serialize_state(state, buffers);
 
-        set_patch_from_property(video, state, buffers);
+        xwidgets_serialize(video(), state["video"], buffers);
     }
 
     template <class D>
-    inline void xvideo_recorder<D>::apply_patch(const xeus::xjson& patch, const xeus::buffer_sequence& buffers)
+    inline void xvideo_recorder<D>::apply_patch(const nl::json& patch, const xeus::buffer_sequence& buffers)
     {
         using xw::set_property_from_patch;
         base_type::apply_patch(patch, buffers);
@@ -110,20 +111,19 @@ namespace xwebrtc
         this->_model_name() = "VideoRecorderModel";
         this->_view_name() = "VideoRecorderView";
 
-        this->video() = xw::video_generator().format(this->format()).finalize();
+        this->video() = xw::video::initialize().format(this->format()).finalize();
     }
 
     template <class D>
     inline void xvideo_recorder<D>::setup_properties()
     {
-        auto self = this->self();
-        self->template observe<decltype(self->format)>([](auto& owner) {
+        this->observe("format", [](auto& owner) {
             owner.video().format() = owner.format();
         });
-        self->video().template observe<decltype(self->video().value)>([self](auto& owner) {
-            if (self->autosave() && owner.value().size() != 0)
+        this->video().observe("value", [this](auto& owner) {
+            if (this->autosave() && owner.value().size() != 0)
             {
-                self->save_file("", owner.value().cbegin(), owner.value().cend());
+                this->save_file("", owner.value().cbegin(), owner.value().cend());
             }
         });
     }
@@ -137,9 +137,6 @@ namespace xwebrtc
     extern template class xw::xmaterialize<xwebrtc::xvideo_recorder>;
     extern template xw::xmaterialize<xwebrtc::xvideo_recorder>::xmaterialize();
     extern template class xw::xtransport<xw::xmaterialize<xwebrtc::xvideo_recorder>>;
-    extern template class xw::xgenerator<xwebrtc::xvideo_recorder>;
-    extern template xw::xgenerator<xwebrtc::xvideo_recorder>::xgenerator();
-    extern template class xw::xtransport<xw::xgenerator<xwebrtc::xvideo_recorder>>;
 #endif
 
 #endif

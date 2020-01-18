@@ -13,6 +13,8 @@
 #include <string>
 #include <vector>
 
+#include "nlohmann/json.hpp"
+
 #include "xtl/xoptional.hpp"
 
 #include "xwidgets/xmaterialize.hpp"
@@ -23,6 +25,8 @@
 #include "xwebrtc_config.hpp"
 #include "xmedia_stream.hpp"
 #include "xpeer.hpp"
+
+namespace nl = nlohmann;
 
 namespace xwebrtc
 {
@@ -42,8 +46,8 @@ namespace xwebrtc
         using stream_list_type = std::vector<stream_type>;
         using peer_list_type = std::vector<xw::xholder<xpeer>>;
 
-        void serialize_state(xeus::xjson&, xeus::buffer_sequence&) const;
-        void apply_patch(const xeus::xjson&, const xeus::buffer_sequence&);
+        void serialize_state(nl::json&, xeus::buffer_sequence&) const;
+        void apply_patch(const nl::json&, const xeus::buffer_sequence&);
 
         XPROPERTY(std::string, derived_type, room, "room");
         XPROPERTY(xtl::xoptional<stream_type>, derived_type, stream);
@@ -66,27 +70,25 @@ namespace xwebrtc
 
     using room = xw::xmaterialize<xroom>;
 
-    using room_generator = xw::xgenerator<xroom>;
-
     /************************
      * xroom implementation *
      ************************/
 
     template <class D>
-    inline void xroom<D>::serialize_state(xeus::xjson& state, xeus::buffer_sequence& buffers) const
+    inline void xroom<D>::serialize_state(nl::json& state, xeus::buffer_sequence& buffers) const
     {
-        using xw::set_patch_from_property;
+        using xw::xwidgets_serialize;
         base_type::serialize_state(state, buffers);
 
-        set_patch_from_property(room, state, buffers);
-        set_patch_from_property(stream, state, buffers);
-        set_patch_from_property(nickname, state, buffers);
-        set_patch_from_property(peers, state, buffers);
-        set_patch_from_property(streams, state, buffers);
+        xwidgets_serialize(room(), state["room"], buffers);
+        xwidgets_serialize(stream(), state["stream"], buffers);
+        xwidgets_serialize(nickname(), state["nickname"], buffers);
+        xwidgets_serialize(peers(), state["peers"], buffers);
+        xwidgets_serialize(streams(), state["streams"], buffers);
     }
 
     template <class D>
-    inline void xroom<D>::apply_patch(const xeus::xjson& patch, const xeus::buffer_sequence& buffers)
+    inline void xroom<D>::apply_patch(const nl::json& patch, const xeus::buffer_sequence& buffers)
     {
         using xw::set_property_from_patch;
         base_type::apply_patch(patch, buffers);
@@ -149,9 +151,6 @@ namespace xwebrtc
     extern template class xw::xmaterialize<xwebrtc::xroom>;
     extern template xw::xmaterialize<xwebrtc::xroom>::xmaterialize();
     extern template class xw::xtransport<xw::xmaterialize<xwebrtc::xroom>>;
-    extern template class xw::xgenerator<xwebrtc::xroom>;
-    extern template xw::xgenerator<xwebrtc::xroom>::xgenerator();
-    extern template class xw::xtransport<xw::xgenerator<xwebrtc::xroom>>;
 #endif
 
 #endif

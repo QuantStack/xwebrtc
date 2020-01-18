@@ -11,14 +11,17 @@
 #define XWEBRTC_VIDEO_STREAM_HPP
 
 #include <string>
-#include <vector>
-#include <iostream>
+#include <utility>
+
+#include "nlohmann/json.hpp"
 
 #include "xwidgets/xmaterialize.hpp"
 #include "xwidgets/xvideo.hpp"
 
 #include "xwebrtc_config.hpp"
 #include "xmedia_stream.hpp"
+
+namespace nl = nlohmann;
 
 namespace xwebrtc
 {
@@ -36,8 +39,8 @@ namespace xwebrtc
 
         using video_type = xw::xholder<xw::xvideo>;
 
-        void serialize_state(xeus::xjson&, xeus::buffer_sequence&) const;
-        void apply_patch(const xeus::xjson&, const xeus::buffer_sequence&);
+        void serialize_state(nl::json&, xeus::buffer_sequence&) const;
+        void apply_patch(const nl::json&, const xeus::buffer_sequence&);
 
         XPROPERTY(video_type, derived_type, video);
         XPROPERTY(bool, derived_type, playing, true);
@@ -55,24 +58,22 @@ namespace xwebrtc
 
     using video_stream = xw::xmaterialize<xvideo_stream>;
 
-    using video_stream_generator = xw::xgenerator<xvideo_stream>;
-
     /********************************
      * xvideo_stream implementation *
      ********************************/
 
     template <class D>
-    inline void xvideo_stream<D>::serialize_state(xeus::xjson& state, xeus::buffer_sequence& buffers) const
+    inline void xvideo_stream<D>::serialize_state(nl::json& state, xeus::buffer_sequence& buffers) const
     {
-        using xw::set_patch_from_property;
+        using xw::xwidgets_serialize;
         base_type::serialize_state(state, buffers);
 
-        set_patch_from_property(video, state, buffers);
-        set_patch_from_property(playing, state, buffers);
+        xwidgets_serialize(video(), state["video"], buffers);
+        xwidgets_serialize(playing(), state["playing"], buffers);
     }
 
     template <class D>
-    inline void xvideo_stream<D>::apply_patch(const xeus::xjson& patch, const xeus::buffer_sequence& buffers)
+    inline void xvideo_stream<D>::apply_patch(const nl::json& patch, const xeus::buffer_sequence& buffers)
     {
         using xw::set_property_from_patch;
         base_type::apply_patch(patch, buffers);
@@ -104,16 +105,16 @@ namespace xwebrtc
         // this->_view_name() = "VideoStreamView";
     }
 
-    inline video_stream_generator video_stream_from_file(const std::string& filename)
+    inline video_stream video_stream_from_file(const std::string& filename)
     {
         auto vid = xw::video_from_file(filename).autoplay(false).controls(false).finalize();
-        return video_stream_generator().video(std::move(vid));
+        return video_stream::initialize().video(std::move(vid));
     }
 
-    inline video_stream_generator video_stream_from_url(const std::string& url)
+    inline video_stream video_stream_from_url(const std::string& url)
     {
         auto vid = xw::video_from_url(url).autoplay(false).controls(false).finalize();
-        return video_stream_generator().video(std::move(vid));
+        return video_stream::initialize().video(std::move(vid));
     }
 }
 
@@ -125,9 +126,6 @@ namespace xwebrtc
     extern template class xw::xmaterialize<xwebrtc::xvideo_stream>;
     extern template xw::xmaterialize<xwebrtc::xvideo_stream>::xmaterialize();
     extern template class xw::xtransport<xw::xmaterialize<xwebrtc::xvideo_stream>>;
-    extern template class xw::xgenerator<xwebrtc::xvideo_stream>;
-    extern template xw::xgenerator<xwebrtc::xvideo_stream>::xgenerator();
-    extern template class xw::xtransport<xw::xgenerator<xwebrtc::xvideo_stream>>;
 #endif
 
 #endif

@@ -61,9 +61,9 @@ message(STATUS "xwebrtc binary version: v${XWEBRTC_BINARY_VERSION}")
 # ============
 
 find_package(cppzmq 4.3.0 REQUIRED)
-find_package(xtl 0.5 REQUIRED)
-find_package(xeus 0.18.1 REQUIRED)
-find_package(xwidgets 0.16.0 REQUIRED)
+find_package(xtl 0.6.8 REQUIRED)
+find_package(xeus 0.23.3 REQUIRED)
+find_package(xwidgets 0.20.0 REQUIRED)
 
 # Source files
 # ============
