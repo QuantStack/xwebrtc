@@ -11,13 +11,17 @@
 #define XWEBRTC_AUDIO_RECORDER_HPP
 
 #include <string>
-#include <vector>
+#include <utility>
+
+#include "nlohmann/json.hpp"
 
 #include "xwidgets/xmaterialize.hpp"
 #include "xwidgets/xaudio.hpp"
 
 #include "xrecorder.hpp"
 #include "xwebrtc_config.hpp"
+
+namespace nl = nlohmann;
 
 namespace xwebrtc
 {
@@ -33,8 +37,8 @@ namespace xwebrtc
         using base_type = xrecorder<D>;
         using derived_type = D;
 
-        void serialize_state(xeus::xjson&, xeus::buffer_sequence&) const;
-        void apply_patch(const xeus::xjson&, const xeus::buffer_sequence&);
+        void serialize_state(nl::json&, xeus::buffer_sequence&) const;
+        void apply_patch(const nl::json&, const xeus::buffer_sequence&);
 
         XPROPERTY(xw::audio, derived_type, audio);
 
@@ -54,23 +58,21 @@ namespace xwebrtc
 
     using audio_recorder = xw::xmaterialize<xaudio_recorder>;
 
-    using audio_recorder_generator = xw::xgenerator<xaudio_recorder>;
-
     /**********************************
      * xaudio_recorder implementation *
      **********************************/
 
     template <class D>
-    inline void xaudio_recorder<D>::serialize_state(xeus::xjson& state, xeus::buffer_sequence& buffers) const
+    inline void xaudio_recorder<D>::serialize_state(nl::json& state, xeus::buffer_sequence& buffers) const
     {
-        using xw::set_patch_from_property;
+        using xw::xwidgets_serialize;
         base_type::serialize_state(state, buffers);
 
-        set_patch_from_property(audio, state, buffers);
+        xwidgets_serialize(audio(), state["audio"], buffers);
     }
 
     template <class D>
-    inline void xaudio_recorder<D>::apply_patch(const xeus::xjson& patch, const xeus::buffer_sequence& buffers)
+    inline void xaudio_recorder<D>::apply_patch(const nl::json& patch, const xeus::buffer_sequence& buffers)
     {
         using xw::set_property_from_patch;
         base_type::apply_patch(patch, buffers);
@@ -119,20 +121,19 @@ namespace xwebrtc
         this->_model_name() = "AudioRecorderModel";
         this->_view_name() = "AudioRecorderView";
 
-        this->audio() = xw::audio_generator().format(this->format()).finalize();
+        this->audio() = xw::audio::initialize().format(this->format()).finalize();
     }
 
     template <class D>
     inline void xaudio_recorder<D>::setup_properties()
     {
-        auto self = this->self();
-        self->template observe<decltype(self->format)>([](auto& owner) {
+        this->observe("format", [](auto& owner) {
             owner.audio().format() = owner.format();
         });
-        self->audio().template observe<decltype(self->audio().value)>([self](auto& owner) {
-            if (self->autosave() && owner.value().size() != 0)
+        this->audio().observe("value", [this](auto& owner) {
+            if (this->autosave() && owner.value().size() != 0)
             {
-                self->save_file("", owner.value().cbegin(), owner.value().cend());
+                this->save_file("", owner.value().cbegin(), owner.value().cend());
             }
         });
     }
@@ -146,9 +147,6 @@ namespace xwebrtc
     extern template class xw::xmaterialize<xwebrtc::xaudio_recorder>;
     extern template xw::xmaterialize<xwebrtc::xaudio_recorder>::xmaterialize();
     extern template class xw::xtransport<xw::xmaterialize<xwebrtc::xaudio_recorder>>;
-    extern template class xw::xgenerator<xwebrtc::xaudio_recorder>;
-    extern template xw::xgenerator<xwebrtc::xaudio_recorder>::xgenerator();
-    extern template class xw::xtransport<xw::xgenerator<xwebrtc::xaudio_recorder>>;
 #endif
 
 #endif

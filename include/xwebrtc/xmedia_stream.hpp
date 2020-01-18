@@ -10,10 +10,14 @@
 #ifndef XWEBRTC_MEDIA_STREAM_HPP
 #define XWEBRTC_MEDIA_STREAM_HPP
 
+#include "nlohmann/json.hpp"
+
 #include "xwidgets/xmaterialize.hpp"
 #include "xwidgets/xwidget.hpp"
 
 #include "xwebrtc_config.hpp"
+
+namespace nl = nlohmann;
 
 namespace xwebrtc
 {
@@ -29,8 +33,8 @@ namespace xwebrtc
         using base_type = xw::xwidget<D>;
         using derived_type = D;
 
-        void serialize_state(xeus::xjson&, xeus::buffer_sequence&) const;
-        void apply_patch(const xeus::xjson&, const xeus::buffer_sequence&);
+        void serialize_state(nl::json&, xeus::buffer_sequence&) const;
+        void apply_patch(const nl::json&, const xeus::buffer_sequence&);
 
     protected:
 
@@ -44,20 +48,18 @@ namespace xwebrtc
 
     using media_stream = xw::xmaterialize<xmedia_stream>;
 
-    using media_stream_generator = xw::xgenerator<xmedia_stream>;
-
     /********************************
      * xmedia_stream implementation *
      ********************************/
 
     template <class D>
-    inline void xmedia_stream<D>::serialize_state(xeus::xjson& state, xeus::buffer_sequence& buffers) const
+    inline void xmedia_stream<D>::serialize_state(nl::json& state, xeus::buffer_sequence& buffers) const
     {
         base_type::serialize_state(state, buffers);
     }
 
     template <class D>
-    inline void xmedia_stream<D>::apply_patch(const xeus::xjson& patch, const xeus::buffer_sequence& buffers)
+    inline void xmedia_stream<D>::apply_patch(const nl::json& patch, const xeus::buffer_sequence& buffers)
     {
         base_type::apply_patch(patch, buffers);
     }
@@ -89,9 +91,6 @@ namespace xwebrtc
     extern template class xw::xmaterialize<xwebrtc::xmedia_stream>;
     extern template xw::xmaterialize<xwebrtc::xmedia_stream>::xmaterialize();
     extern template class xw::xtransport<xw::xmaterialize<xwebrtc::xmedia_stream>>;
-    extern template class xw::xgenerator<xwebrtc::xmedia_stream>;
-    extern template xw::xgenerator<xwebrtc::xmedia_stream>::xgenerator();
-    extern template class xw::xtransport<xw::xgenerator<xwebrtc::xmedia_stream>>;
 #endif
 
 #endif

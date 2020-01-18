@@ -12,7 +12,10 @@
 
 #include <fstream>
 #include <string>
+#include <utility>
 #include <vector>
+
+#include "nlohmann/json.hpp"
 
 #include "xproperty/xobserved.hpp"
 
@@ -21,6 +24,8 @@
 
 #include "xmedia_stream.hpp"
 #include "xwebrtc_config.hpp"
+
+namespace nl = nlohmann;
 
 namespace xwebrtc
 {
@@ -40,8 +45,8 @@ namespace xwebrtc
         using data_type = std::vector<char>;
         using data_const_iterator = typename data_type::const_iterator;
 
-        void serialize_state(xeus::xjson&, xeus::buffer_sequence&) const;
-        void apply_patch(const xeus::xjson&, const xeus::buffer_sequence&);
+        void serialize_state(nl::json&, xeus::buffer_sequence&) const;
+        void apply_patch(const nl::json&, const xeus::buffer_sequence&);
 
         XPROPERTY(media_stream_type, derived_type, stream);
         XPROPERTY(std::string, derived_type, filename, "record");
@@ -66,28 +71,26 @@ namespace xwebrtc
 
     using recorder = xw::xmaterialize<xrecorder>;
 
-    using recorder_generator = xw::xgenerator<xrecorder>;
-
     /****************************
      * xrecorder implementation *
      ****************************/
 
     template <class D>
-    inline void xrecorder<D>::serialize_state(xeus::xjson& state, xeus::buffer_sequence& buffers) const
+    inline void xrecorder<D>::serialize_state(nl::json& state, xeus::buffer_sequence& buffers) const
     {
-        using xw::set_patch_from_property;
+        using xw::xwidgets_serialize;
         base_type::serialize_state(state, buffers);
 
-        set_patch_from_property(stream, state, buffers);
-        set_patch_from_property(filename, state, buffers);
-        set_patch_from_property(format, state, buffers);
-        set_patch_from_property(recording, state, buffers);
-        set_patch_from_property(autosave, state, buffers);
-        set_patch_from_property(_data_src, state, buffers);
+        xwidgets_serialize(stream(), state["stream"], buffers);
+        xwidgets_serialize(filename(), state["filename"], buffers);
+        xwidgets_serialize(format(), state["format"], buffers);
+        xwidgets_serialize(recording(), state["recording"], buffers);
+        xwidgets_serialize(autosave(), state["autosave"], buffers);
+        xwidgets_serialize(_data_src(), state["_data_src"], buffers);
     }
 
     template <class D>
-    inline void xrecorder<D>::apply_patch(const xeus::xjson& patch, const xeus::buffer_sequence& buffers)
+    inline void xrecorder<D>::apply_patch(const nl::json& patch, const xeus::buffer_sequence& buffers)
     {
         using xw::set_property_from_patch;
         base_type::apply_patch(patch, buffers);
@@ -110,7 +113,7 @@ namespace xwebrtc
     template <class D>
     inline void xrecorder<D>::download() const
     {
-        xeus::xjson state;
+        nl::json state;
         xeus::buffer_sequence buffers;
         state["msg"] = "download";
         this->send(std::move(state), std::move(buffers));
@@ -170,9 +173,6 @@ namespace xwebrtc
     extern template class xw::xmaterialize<xwebrtc::xrecorder>;
     extern template xw::xmaterialize<xwebrtc::xrecorder>::xmaterialize();
     extern template class xw::xtransport<xw::xmaterialize<xwebrtc::xrecorder>>;
-    extern template class xw::xgenerator<xwebrtc::xrecorder>;
-    extern template xw::xgenerator<xwebrtc::xrecorder>::xgenerator();
-    extern template class xw::xtransport<xw::xgenerator<xwebrtc::xrecorder>>;
 #endif
 
 #endif

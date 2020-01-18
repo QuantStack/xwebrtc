@@ -11,6 +11,9 @@
 #define XWEBRTC_PEER_HPP
 
 #include <string>
+#include <utility>
+
+#include "nlohmann/json.hpp"
 
 #include "xtl/xoptional.hpp"
 
@@ -21,6 +24,8 @@
 
 #include "xwebrtc_config.hpp"
 #include "xmedia_stream.hpp"
+
+namespace nl = nlohmann;
 
 namespace xwebrtc
 {
@@ -38,8 +43,8 @@ namespace xwebrtc
 
         using stream_type = xw::xholder<xmedia_stream>;
 
-        void serialize_state(xeus::xjson&, xeus::buffer_sequence&) const;
-        void apply_patch(const xeus::xjson&, const xeus::buffer_sequence&);
+        void serialize_state(nl::json&, xeus::buffer_sequence&) const;
+        void apply_patch(const nl::json&, const xeus::buffer_sequence&);
 
         void connect() const;
 
@@ -64,26 +69,24 @@ namespace xwebrtc
 
     using peer = xw::xmaterialize<xpeer>;
 
-    using peer_generator = xw::xgenerator<xpeer>;
-
     /************************
      * xpeer implementation *
      ************************/
 
     template <class D>
-    inline void xpeer<D>::serialize_state(xeus::xjson& state, xeus::buffer_sequence& buffers) const
+    inline void xpeer<D>::serialize_state(nl::json& state, xeus::buffer_sequence& buffers) const
     {
-        using xw::set_patch_from_property;
+        using xw::xwidgets_serialize;
         base_type::serialize_state(state, buffers);
 
-        set_patch_from_property(stream_local, state, buffers);
-        set_patch_from_property(stream_remote, state, buffers);
-        set_patch_from_property(id_local, state, buffers);
-        set_patch_from_property(id_remote, state, buffers);
+        xwidgets_serialize(stream_local(), state["stream_local"], buffers);
+        xwidgets_serialize(stream_remote(), state["stream_remote"], buffers);
+        xwidgets_serialize(id_local(), state["id_local"], buffers);
+        xwidgets_serialize(id_remote(), state["id_remote"], buffers);
     }
 
     template <class D>
-    inline void xpeer<D>::apply_patch(const xeus::xjson& patch, const xeus::buffer_sequence& buffers)
+    inline void xpeer<D>::apply_patch(const nl::json& patch, const xeus::buffer_sequence& buffers)
     {
         using xw::set_property_from_patch;
         base_type::apply_patch(patch, buffers);
@@ -99,7 +102,7 @@ namespace xwebrtc
     template <class D>
     inline void xpeer<D>::connect() const
     {
-        xeus::xjson state;
+        nl::json state;
         xeus::buffer_sequence buffers;
         state["msg"] = "connect";
         this->send(std::move(state), std::move(buffers));
@@ -147,9 +150,6 @@ namespace xwebrtc
     extern template class xw::xmaterialize<xwebrtc::xpeer>;
     extern template xw::xmaterialize<xwebrtc::xpeer>::xmaterialize();
     extern template class xw::xtransport<xw::xmaterialize<xwebrtc::xpeer>>;
-    extern template class xw::xgenerator<xwebrtc::xpeer>;
-    extern template xw::xgenerator<xwebrtc::xpeer>::xgenerator();
-    extern template class xw::xtransport<xw::xgenerator<xwebrtc::xpeer>>;
 #endif
 
 #endif

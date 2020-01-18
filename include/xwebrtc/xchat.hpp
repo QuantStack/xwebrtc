@@ -34,9 +34,9 @@ namespace xwebrtc
             template <class T>
             inline xchat_room(const std::string& room_name, T&& input_stream)
             : room_name(room_name), stream(std::forward<T>(input_stream)),
-            room(room_mqtt_generator().stream(std::forward<T>(input_stream)).room(room_name).finalize()),
-            box(xw::hbox()),
-            link(xw::link(room, "streams", box, "children"))
+              room(room_mqtt::initialize().stream(std::forward<T>(input_stream)).room(room_name).finalize()),
+              box(xw::hbox()),
+              link(xw::link(room, "streams", box, "children"))
             {
             }
 

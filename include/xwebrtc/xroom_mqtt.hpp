@@ -12,6 +12,8 @@
 
 #include <string>
 
+#include "nlohmann/json.hpp"
+
 #include "xtl/xoptional.hpp"
 
 #include "xwidgets/xmaterialize.hpp"
@@ -19,6 +21,8 @@
 
 #include "xwebrtc_config.hpp"
 #include "xroom.hpp"
+
+namespace nl = nlohmann;
 
 namespace xwebrtc
 {
@@ -34,8 +38,8 @@ namespace xwebrtc
         using base_type = xroom<D>;
         using derived_type = D;
 
-        void serialize_state(xeus::xjson&, xeus::buffer_sequence&) const;
-        void apply_patch(const xeus::xjson&, const xeus::buffer_sequence&);
+        void serialize_state(nl::json&, xeus::buffer_sequence&) const;
+        void apply_patch(const nl::json&, const xeus::buffer_sequence&);
 
         XPROPERTY(std::string, derived_type, server, "wss://iot.eclipse.org:443/ws");
 
@@ -51,23 +55,21 @@ namespace xwebrtc
 
     using room_mqtt = xw::xmaterialize<xroom_mqtt>;
 
-    using room_mqtt_generator = xw::xgenerator<xroom_mqtt>;
-
     /*****************************
      * xroom_mqtt implementation *
      *****************************/
 
     template <class D>
-    inline void xroom_mqtt<D>::serialize_state(xeus::xjson& state, xeus::buffer_sequence& buffers) const
+    inline void xroom_mqtt<D>::serialize_state(nl::json& state, xeus::buffer_sequence& buffers) const
     {
-        using xw::set_patch_from_property;
+        using xw::xwidgets_serialize;
         base_type::serialize_state(state, buffers);
 
-        set_patch_from_property(server, state, buffers);
+        xwidgets_serialize(server(), state["server"], buffers);
     }
 
     template <class D>
-    inline void xroom_mqtt<D>::apply_patch(const xeus::xjson& patch, const xeus::buffer_sequence& buffers)
+    inline void xroom_mqtt<D>::apply_patch(const nl::json& patch, const xeus::buffer_sequence& buffers)
     {
         using xw::set_property_from_patch;
         base_type::apply_patch(patch, buffers);
@@ -98,9 +100,6 @@ namespace xwebrtc
     extern template class xw::xmaterialize<xwebrtc::xroom_mqtt>;
     extern template xw::xmaterialize<xwebrtc::xroom_mqtt>::xmaterialize();
     extern template class xw::xtransport<xw::xmaterialize<xwebrtc::xroom_mqtt>>;
-    extern template class xw::xgenerator<xwebrtc::xroom_mqtt>;
-    extern template xw::xgenerator<xwebrtc::xroom_mqtt>::xgenerator();
-    extern template class xw::xtransport<xw::xgenerator<xwebrtc::xroom_mqtt>>;
 #endif
 
 #endif

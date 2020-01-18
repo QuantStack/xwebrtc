@@ -11,13 +11,17 @@
 #define XWEBRTC_IMAGE_RECORDER_HPP
 
 #include <string>
-#include <vector>
+#include <utility>
+
+#include "nlohmann/json.hpp"
 
 #include "xwidgets/xmaterialize.hpp"
 #include "xwidgets/ximage.hpp"
 
 #include "xrecorder.hpp"
 #include "xwebrtc_config.hpp"
+
+namespace nl = nlohmann;
 
 namespace xwebrtc
 {
@@ -33,8 +37,8 @@ namespace xwebrtc
         using base_type = xrecorder<D>;
         using derived_type = D;
 
-        void serialize_state(xeus::xjson&, xeus::buffer_sequence&) const;
-        void apply_patch(const xeus::xjson&, const xeus::buffer_sequence&);
+        void serialize_state(nl::json&, xeus::buffer_sequence&) const;
+        void apply_patch(const nl::json&, const xeus::buffer_sequence&);
 
         XPROPERTY(xw::image, derived_type, image);
         XPROPERTY(std::string, derived_type, format, "png");
@@ -57,26 +61,24 @@ namespace xwebrtc
 
     using image_recorder = xw::xmaterialize<ximage_recorder>;
 
-    using image_recorder_generator = xw::xgenerator<ximage_recorder>;
-
     /**********************************
      * ximage_recorder implementation *
      **********************************/
 
     template <class D>
-    inline void ximage_recorder<D>::serialize_state(xeus::xjson& state, xeus::buffer_sequence& buffers) const
+    inline void ximage_recorder<D>::serialize_state(nl::json& state, xeus::buffer_sequence& buffers) const
     {
-        using xw::set_patch_from_property;
+        using xw::xwidgets_serialize;
         base_type::serialize_state(state, buffers);
 
-        set_patch_from_property(image, state, buffers);
-        set_patch_from_property(format, state, buffers);
-        set_patch_from_property(_width, state, buffers);
-        set_patch_from_property(_height, state, buffers);
+        xwidgets_serialize(image(), state["image"], buffers);
+        xwidgets_serialize(format(), state["format"], buffers);
+        xwidgets_serialize(_width(), state["_width"], buffers);
+        xwidgets_serialize(_height(), state["_height"], buffers);
     }
 
     template <class D>
-    inline void ximage_recorder<D>::apply_patch(const xeus::xjson& patch, const xeus::buffer_sequence& buffers)
+    inline void ximage_recorder<D>::apply_patch(const nl::json& patch, const xeus::buffer_sequence& buffers)
     {
         using xw::set_property_from_patch;
         base_type::apply_patch(patch, buffers);
@@ -128,7 +130,7 @@ namespace xwebrtc
         this->_model_name() = "ImageRecorderModel";
         this->_view_name() = "ImageRecorderView";
 
-        this->image() = xw::image_generator()
+        this->image() = xw::image::initialize()
             .format(this->format())
             .height(this->_height())
             .width(this->_width())
@@ -138,20 +140,19 @@ namespace xwebrtc
     template <class D>
     inline void ximage_recorder<D>::setup_properties()
     {
-        auto self = this->self();
-        self->template observe<decltype(self->_width)>([](auto& owner) {
+        this->observe("_width", [](auto& owner) {
             owner.image().width() = owner._width();
         });
-        self->template observe<decltype(self->_height)>([](auto& owner) {
+        this->observe("_height", [](auto& owner) {
             owner.image().height() = owner._height();
         });
-        self->template observe<decltype(self->format)>([](auto& owner) {
+        this->observe("format", [](auto& owner) {
             owner.image().format() = owner.format();
         });
-        self->image().template observe<decltype(self->image().value)>([self](auto& owner) {
-            if (self->autosave() && owner.value().size() != 0)
+        this->image().observe("value", [this](auto& owner) {
+            if (this->autosave() && owner.value().size() != 0)
             {
-                self->save_file("", owner.value().cbegin(), owner.value().cend());
+                this->save_file("", owner.value().cbegin(), owner.value().cend());
             }
         });
     }
@@ -165,9 +166,6 @@ namespace xwebrtc
     extern template class xw::xmaterialize<xwebrtc::ximage_recorder>;
     extern template xw::xmaterialize<xwebrtc::ximage_recorder>::xmaterialize();
     extern template class xw::xtransport<xw::xmaterialize<xwebrtc::ximage_recorder>>;
-    extern template class xw::xgenerator<xwebrtc::ximage_recorder>;
-    extern template xw::xgenerator<xwebrtc::ximage_recorder>::xgenerator();
-    extern template class xw::xtransport<xw::xgenerator<xwebrtc::ximage_recorder>>;
 #endif
 
 #endif

@@ -4,11 +4,11 @@ channels:
 dependencies:
   # Widgets 
   - xwebrtc=0.4.1
-  - xwidgets=0.16.1
+  - xwidgets=0.20.0
   - widgetsnbextension >=3.0.0
   - ipywebrtc=0.4.1
   # Xtensor
-  - xtensor-io=0.7.0
-  - xtensor-fftw=0.2.5
+  - xtensor-io=0.9.0
+  - xtensor-fftw=0.2.6
   # C++ kernel
-  - xeus-cling=0.4.11
+  - xeus-cling=0.8.1

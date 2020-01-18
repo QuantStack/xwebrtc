@@ -10,13 +10,16 @@
 #ifndef XWEBRTC_WIDGET_STREAM_HPP
 #define XWEBRTC_WIDGET_STREAM_HPP
 
-#include <string>
 #include <stdexcept>
+
+#include "nlohmann/json.hpp"
 
 #include "xwidgets/xmaterialize.hpp"
 
 #include "xwebrtc_config.hpp"
 #include "xmedia_stream.hpp"
+
+namespace nl = nlohmann;
 
 namespace xwebrtc
 {
@@ -34,8 +37,8 @@ namespace xwebrtc
 
         using widget_type = xw::xholder<xw::xwidget>;
 
-        void serialize_state(xeus::xjson&, xeus::buffer_sequence&) const;
-        void apply_patch(const xeus::xjson&, const xeus::buffer_sequence&);
+        void serialize_state(nl::json&, xeus::buffer_sequence&) const;
+        void apply_patch(const nl::json&, const xeus::buffer_sequence&);
 
         XPROPERTY(widget_type, derived_type, widget);
         XPROPERTY(xtl::xoptional<int>, derived_type, max_fps);
@@ -55,24 +58,22 @@ namespace xwebrtc
 
     using widget_stream = xw::xmaterialize<xwidget_stream>;
 
-    using widget_stream_generator = xw::xgenerator<xwidget_stream>;
-
     /********************************
      * xwidget_stream implementation *
      ********************************/
 
     template <class D>
-    inline void xwidget_stream<D>::serialize_state(xeus::xjson& state, xeus::buffer_sequence& buffers) const
+    inline void xwidget_stream<D>::serialize_state(nl::json& state, xeus::buffer_sequence& buffers) const
     {
-        using xw::set_patch_from_property;
+        using xw::xwidgets_serialize;
         base_type::serialize_state(state, buffers);
 
-        set_patch_from_property(widget, state, buffers);
-        set_patch_from_property(max_fps, state, buffers);
+        xwidgets_serialize(widget(), state["widget"], buffers);
+        xwidgets_serialize(max_fps(), state["max_fps"], buffers);
     }
 
     template <class D>
-    inline void xwidget_stream<D>::apply_patch(const xeus::xjson& patch, const xeus::buffer_sequence& buffers)
+    inline void xwidget_stream<D>::apply_patch(const nl::json& patch, const xeus::buffer_sequence& buffers)
     {
         using xw::set_property_from_patch;
         base_type::apply_patch(patch, buffers);
@@ -111,8 +112,7 @@ namespace xwebrtc
     template <class D>
     inline void xwidget_stream<D>::setup_properties()
     {
-        auto self = this->self();
-        self->template validate<decltype(self->max_fps)>([](auto& /*owner*/, auto& proposal) {
+        this->template validate<typename decltype(this->max_fps)::value_type>("max_fps", [](auto& /*owner*/, auto& proposal) {
             if (proposal.has_value() && proposal.value() < 0)
             {
                 throw std::runtime_error("max_fps attribute must be a positive integer");
@@ -129,9 +129,6 @@ namespace xwebrtc
     extern template class xw::xmaterialize<xwebrtc::xwidget_stream>;
     extern template xw::xmaterialize<xwebrtc::xwidget_stream>::xmaterialize();
     extern template class xw::xtransport<xw::xmaterialize<xwebrtc::xwidget_stream>>;
-    extern template class xw::xgenerator<xwebrtc::xwidget_stream>;
-    extern template xw::xgenerator<xwebrtc::xwidget_stream>::xgenerator();
-    extern template class xw::xtransport<xw::xgenerator<xwebrtc::xwidget_stream>>;
 #endif
 
 #endif
