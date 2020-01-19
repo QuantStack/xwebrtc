@@ -3,7 +3,7 @@ channels:
   - conda-forge
 dependencies:
   # Widgets 
-  - xwebrtc=0.4.1
+  - xwebrtc=0.5.0
   - xwidgets=0.20.0
   - widgetsnbextension >=3.0.0
   - ipywebrtc=0.4.1

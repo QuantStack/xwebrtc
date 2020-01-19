@@ -23,8 +23,8 @@
 
 // Project version
 #define XWEBRTC_VERSION_MAJOR 0
-#define XWEBRTC_VERSION_MINOR 4
-#define XWEBRTC_VERSION_PATCH 1
+#define XWEBRTC_VERSION_MINOR 5
+#define XWEBRTC_VERSION_PATCH 0
 
 // Binary version
 #define XWEBRTC_BINARY_CURRENT 1
