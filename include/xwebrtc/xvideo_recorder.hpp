@@ -46,7 +46,7 @@ namespace xwebrtc
     protected:
 
         xvideo_recorder();
-        xvideo_recorder(xw::xholder<xmedia_stream> video);
+        xvideo_recorder(xw::xholder video);
         using base_type::base_type;
 
     private:
@@ -95,7 +95,7 @@ namespace xwebrtc
     }
 
     template <class D>
-    inline xvideo_recorder<D>::xvideo_recorder(xw::xholder<xmedia_stream> video)
+    inline xvideo_recorder<D>::xvideo_recorder(xw::xholder video)
         : base_type()
     {
         this->stream() = video;

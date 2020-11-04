@@ -37,7 +37,7 @@ namespace xwebrtc
         using base_type = xmedia_stream<D>;
         using derived_type = D;
 
-        using image_type = xw::xholder<xw::ximage>;
+        using image_type = xw::xholder;
 
         void serialize_state(nl::json&, xeus::buffer_sequence&) const;
         void apply_patch(const nl::json&, const xeus::buffer_sequence&);
@@ -47,7 +47,7 @@ namespace xwebrtc
     protected:
 
         ximage_stream();
-        ximage_stream(xw::xholder<xw::ximage> image);
+        ximage_stream(xw::xholder image);
         using base_type::base_type;
 
     private:
@@ -87,7 +87,7 @@ namespace xwebrtc
     }
 
     template <class D>
-    inline ximage_stream<D>::ximage_stream(xw::xholder<xw::ximage> image)
+    inline ximage_stream<D>::ximage_stream(xw::xholder image)
         : base_type()
     {
         set_defaults();

@@ -42,9 +42,9 @@ namespace xwebrtc
         using base_type = xw::xobject<D>;
         using derived_type = D;
 
-        using stream_type = xw::xholder<xmedia_stream>;
+        using stream_type = xw::xholder;
         using stream_list_type = std::vector<stream_type>;
-        using peer_list_type = std::vector<xw::xholder<xpeer>>;
+        using peer_list_type = std::vector<xw::xholder>;
 
         void serialize_state(nl::json&, xeus::buffer_sequence&) const;
         void apply_patch(const nl::json&, const xeus::buffer_sequence&);
