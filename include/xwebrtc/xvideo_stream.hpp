@@ -37,7 +37,7 @@ namespace xwebrtc
         using base_type = xmedia_stream<D>;
         using derived_type = D;
 
-        using video_type = xw::xholder<xw::xvideo>;
+        using video_type = xw::xholder;
 
         void serialize_state(nl::json&, xeus::buffer_sequence&) const;
         void apply_patch(const nl::json&, const xeus::buffer_sequence&);
@@ -48,7 +48,7 @@ namespace xwebrtc
     protected:
 
         xvideo_stream();
-        xvideo_stream(xw::xholder<xw::xvideo> video);
+        xvideo_stream(xw::xholder video);
         using base_type::base_type;
 
     private:
@@ -90,7 +90,7 @@ namespace xwebrtc
     }
 
     template <class D>
-    inline xvideo_stream<D>::xvideo_stream(xw::xholder<xw::xvideo> video)
+    inline xvideo_stream<D>::xvideo_stream(xw::xholder video)
         : base_type()
     {
         set_defaults();

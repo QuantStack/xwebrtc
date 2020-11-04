@@ -41,7 +41,7 @@ namespace xwebrtc
         using base_type = xw::xwidget<D>;
         using derived_type = D;
 
-        using media_stream_type = xw::xholder<xmedia_stream>;
+        using media_stream_type = xw::xholder;
         using data_type = std::vector<char>;
         using data_const_iterator = typename data_type::const_iterator;
 

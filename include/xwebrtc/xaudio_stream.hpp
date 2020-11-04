@@ -37,7 +37,7 @@ namespace xwebrtc
         using base_type = xmedia_stream<D>;
         using derived_type = D;
 
-        using audio_type = xw::xholder<xw::xaudio>;
+        using audio_type = xw::xholder;
 
         void serialize_state(nl::json&, xeus::buffer_sequence&) const;
         void apply_patch(const nl::json&, const xeus::buffer_sequence&);
@@ -48,7 +48,7 @@ namespace xwebrtc
     protected:
 
         xaudio_stream();
-        xaudio_stream(xw::xholder<xw::xaudio> audio);
+        xaudio_stream(xw::xholder audio);
         using base_type::base_type;
 
     private:
@@ -90,7 +90,7 @@ namespace xwebrtc
     }
 
     template <class D>
-    inline xaudio_stream<D>::xaudio_stream(xw::xholder<xw::xaudio> audio)
+    inline xaudio_stream<D>::xaudio_stream(xw::xholder audio)
     : base_type()
     {
         set_defaults();

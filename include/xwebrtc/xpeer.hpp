@@ -17,8 +17,9 @@
 
 #include "xtl/xoptional.hpp"
 
-#include "xwidgets/xmaterialize.hpp"
+#include "xwidgets/xfactory.hpp"
 #include "xwidgets/xholder.hpp"
+#include "xwidgets/xmaterialize.hpp"
 #include "xwidgets/xobject.hpp"
 #include "xwidgets/xmaker.hpp"
 
@@ -41,7 +42,7 @@ namespace xwebrtc
         using base_type = xw::xobject<D>;
         using derived_type = D;
 
-        using stream_type = xw::xholder<xmedia_stream>;
+        using stream_type = xw::xholder;
 
         void serialize_state(nl::json&, xeus::buffer_sequence&) const;
         void apply_patch(const nl::json&, const xeus::buffer_sequence&);
