@@ -37,7 +37,7 @@ install:
   # Install build dependencies
   - conda install cmake -c conda-forge
   - cmake -G "NMake Makefiles" -D CMAKE_INSTALL_PREFIX=%MINICONDA%\\LIBRARY -DDOWNLOAD_GTEST=ON .
-  - nmake
+  - nmake install
   - nmake test_xwebrtc
   - cd test
 

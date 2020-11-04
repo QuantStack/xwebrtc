@@ -87,10 +87,7 @@ namespace xwebrtc
  * precompiled types *
  *********************/
 
-#ifndef _WIN32
     extern template class xw::xmaterialize<xwebrtc::xmedia_stream>;
-    extern template xw::xmaterialize<xwebrtc::xmedia_stream>::xmaterialize();
     extern template class xw::xtransport<xw::xmaterialize<xwebrtc::xmedia_stream>>;
-#endif
 
 #endif
