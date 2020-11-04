@@ -143,10 +143,7 @@ namespace xwebrtc
  * precompiled types *
  *********************/
 
-#ifndef _WIN32
-    extern template class xw::xmaterialize<xwebrtc::xaudio_recorder>;
-    extern template xw::xmaterialize<xwebrtc::xaudio_recorder>::xmaterialize();
-    extern template class xw::xtransport<xw::xmaterialize<xwebrtc::xaudio_recorder>>;
-#endif
+extern template class xw::xmaterialize<xwebrtc::xaudio_recorder>;
+extern template class xw::xtransport<xw::xmaterialize<xwebrtc::xaudio_recorder>>;
 
 #endif

@@ -122,10 +122,7 @@ namespace xwebrtc
  * precompiled types *
  *********************/
 
-#ifndef _WIN32
     extern template class xw::xmaterialize<xwebrtc::xaudio_stream>;
-    extern template xw::xmaterialize<xwebrtc::xaudio_stream>::xmaterialize();
     extern template class xw::xtransport<xw::xmaterialize<xwebrtc::xaudio_stream>>;
-#endif
 
 #endif
