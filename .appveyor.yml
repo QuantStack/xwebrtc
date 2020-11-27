@@ -33,7 +33,7 @@ install:
   - conda update -q conda
   - conda info -a
   # Install host dependencies
-  - conda install cppzmq xproperty xwidgets=0.23.0 -c conda-forge
+  - conda install cppzmq xproperty xwidgets=0.24.1 -c conda-forge
   # Install build dependencies
   - conda install cmake -c conda-forge
   - cmake -G "NMake Makefiles" -D CMAKE_INSTALL_PREFIX=%MINICONDA%\\LIBRARY -DDOWNLOAD_GTEST=ON .
