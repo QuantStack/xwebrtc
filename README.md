@@ -16,12 +16,12 @@ To try out xwebrtc interactively in your web browser, just click on the binder l
 
 ## Installation
 
-We provide a package for the conda package manager.
+We provide a package for the mamba (or conda) package manager.
 
 - Installing `xwebrtc` and the C++ kernel
 
 ```bash
-conda install xeus-cling xwebrtc -c conda-forge
+mamba install xeus-cling xwebrtc -c conda-forge
 ```
 
 Then, the front-end extension must be installed for either the classic notebook or JupyterLab.
@@ -29,8 +29,8 @@ Then, the front-end extension must be installed for either the classic notebook 
 - Installing the extensions for the classic notebook
 
 ```
-conda install widgetsnbextension -c conda-forge
-conda install ipywebrtc -c conda-forge
+mamba install widgetsnbextension -c conda-forge
+mamba install ipywebrtc -c conda-forge
 ```
 
 ## Installation from sources
@@ -44,7 +44,7 @@ make install
 
 ## Dependencies
 
-All the dependencies of xleaflet are available for the conda package manager.
+All the dependencies of xleaflet are available for the mamba (or conda) package manager.
 
 | `xwebrtc`  | `xwidgets`    |  `xeus`         |
 |------------|---------------|-----------------|
