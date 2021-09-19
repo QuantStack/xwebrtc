@@ -3,12 +3,12 @@ channels:
   - conda-forge
 dependencies:
   # Widgets 
-  - xwebrtc=0.6.0
-  - xwidgets=0.23.0
+  - xwebrtc=0.7.0
+  - xwidgets=0.26.0
   - widgetsnbextension >=3.0.0
-  - ipywebrtc=0.4.1
+  - ipywebrtc=0.6.0
   # Xtensor
-  - xtensor-io=0.9.0
+  - xtensor-io=0.12.9
   - xtensor-fftw=0.2.6
   # C++ kernel
-  - xeus-cling=0.10.0
+  - xeus-cling=0.13.0
